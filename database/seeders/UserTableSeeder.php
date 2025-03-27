@@ -14,17 +14,11 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'cashier']);
+        Role::create(['name' => 'superadmin']);
 
         User::factory()->create([
             'name' => 'Admin',
-            'email' => 'admin@apotekta.ahadunstudio.id',
-        ])->assignRole('admin');
-
-        User::factory()->create([
-            'name' => 'Cashirt',
-            'email' => 'cashier@apotekta.ahadunstudio.id',
-        ])->assignRole('cashier');
+            'email' => 'superadmin@mail.com',
+        ])->assignRole('superadmin');
     }
 }

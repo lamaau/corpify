@@ -1,9 +1,6 @@
-// @ts-ignore
 import routes from "./routes";
 import { createRouterGuard } from "./guard";
 import { createRouter, createWebHistory } from "vue-router";
-
-console.log(routes);
 
 const router = createRouter({
   history: createWebHistory(),
