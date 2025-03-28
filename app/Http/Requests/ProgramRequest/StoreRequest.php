@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Gallery;
+namespace App\Http\Requests\ProgramRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -23,15 +23,23 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'caption' => ['nullable', 'string', 'max:255'],
-            'file' => ['required', 'file', 'mimes:jpeg,jpg,png,webp,pdf,mp4', 'max:5120'], // 5MB limit
+            "name" => ["required"],
+            "summary" => ["required"],
+            'features' => ['required', 'array'],
+            'features.*.icon' => ['required', 'string'],
+            'features.*.feature_name' => ['required', 'string', 'max:25'],
         ];
     }
 
-    public function getData(): array
+    public function getProgramData(): array
     {
-        return collect($this->validated())->except('file')->merge([
+        return collect($this->validated())->except('features')->merge([
             'created_by' => user()->id,
         ])->all();
+    }
+
+    public function getProgramFeaturesData(): array
+    {
+        return collect($this->features)->all();
     }
 }
