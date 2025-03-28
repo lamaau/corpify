@@ -81,7 +81,7 @@ export function useSidebar() {
           title: "Settings",
           icon: Settings,
           items: [
-            { title: "Profile", url: "/settings/" },
+            { title: "Profile", url: "/settings" },
             { title: "Account", url: "/settings/account" },
             { title: "Appearance", url: "/settings/appearance" },
             { title: "Notifications", url: "/settings/notifications" },

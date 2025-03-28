@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Setting;
+namespace App\Actions\Setting;
 
 use App\Models\Setting\Setting;
 use Illuminate\Support\Collection;
@@ -10,9 +10,9 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class SettingAction
 {
-    private $context;
+    private ?string $context = 'app';
 
-    private $settingAble;
+    private Model|Authenticatable|null $settingAble = null;
 
     public function __construct(
         private Setting $model
@@ -20,7 +20,7 @@ class SettingAction
         // 
     }
 
-    public  static function make(): static
+    public static function instance(): static
     {
         return new static(new Setting);
     }
@@ -37,28 +37,27 @@ class SettingAction
     public function formatSettings(Collection $settings, $decrypt = false)
     {
         return $settings->reduce(function ($final, $setting) use ($decrypt) {
-            $final[$setting->name] = $decrypt ? decrypt($setting->value) : $setting->value;
-
+            $final[$setting->name] = $decrypt && !empty($setting->value) ? decrypt($setting->value) : $setting->value;
             return $final;
         }, []);
     }
 
     public function basicQuery($context = null, $settingable_type = null, $settingable_id = null)
     {
-        return $this->model::query()->when($context, function (Builder $builder) use ($context) {
-            $builder->whereIn('context', is_array($context) ? $context : [$context]);
-        })->where('settingable_type', $settingable_type)
-            ->where('settingable_id', $settingable_id);
+        return $this->model->newQuery()
+            ->when($context, fn(Builder $builder) => $builder->whereIn('context', (array) $context))
+            ->when($settingable_type, fn(Builder $builder) => $builder->where('settingable_type', $settingable_type))
+            ->when($settingable_id, fn(Builder $builder) => $builder->where('settingable_id', $settingable_id));
     }
 
     public function findAppSettingWithName(string $name, string $context = 'app')
     {
-        return $this->basicQuery($context, null, null)
+        return $this->basicQuery($context)
             ->where('name', $name)
             ->first();
     }
 
-    public function createSettingInstance(string $name, string $context, $settingable_type = null, $settingable_id = null)
+    public function create(string $name, string $context, $settingable_type = null, $settingable_id = null)
     {
         return $this->basicQuery($context, $settingable_type, $settingable_id)
             ->where('name', $name)
@@ -76,16 +75,14 @@ class SettingAction
 
     public function getFromContexts($context)
     {
-        $context = is_array($context) ? $context : func_get_args();
-
-        return $this->model::query()
-            ->whereIn('context', $context)
+        return $this->model->newQuery()
+            ->whereIn('context', (array) $context)
             ->get();
     }
 
     public function getDefaultMailKey($key = 'default_mail', $settingable_type = null, $settingable_id = null)
     {
-        return $this->model::query()
+        return $this->model->newQuery()
             ->select(['id', 'name', 'value', 'context'])
             ->where('name', $key)
             ->where('settingable_type', $settingable_type)
@@ -96,7 +93,6 @@ class SettingAction
     public function getFromKey($key)
     {
         [$setting_able_id, $setting_able_type] = $this->getSettingAble();
-
         $context = $this->getContext();
 
         $setting = $this->basicQuery($context, $setting_able_type, $setting_able_id)
@@ -104,9 +100,7 @@ class SettingAction
             ->select(['name', 'value'])
             ->first();
 
-        $setting = $setting ? $this->formatSettings(collect([$setting])) : [$key => ''];
-
-        return isset($setting[$key]) ? $setting[$key] : '';
+        return $setting ? $this->formatSettings(collect([$setting]))[$key] ?? '' : '';
     }
 
     public function getFromKeys(array $keys)
@@ -124,37 +118,29 @@ class SettingAction
 
     public function getSettingAble()
     {
-        $settingable_type = null;
-        $settingable_id = null;
+        $settingable_type = $this->settingAble instanceof Model || $this->settingAble instanceof Authenticatable
+            ? get_class($this->settingAble)
+            : null;
 
-        if ($this->settingAble instanceof Model || $this->settingAble instanceof Authenticatable) {
-            $settingable_type = get_class($this->settingAble);
-        }
+        $settingable_id = $this->settingAble?->id ?? null;
 
-        $settingable_id = optional($this->settingAble)->id ?: null;
-
-        return [
-            $settingable_id,
-            $settingable_type,
-        ];
+        return [$settingable_id, $settingable_type];
     }
 
     public function setSettingAble($settingAble)
     {
         $this->settingAble = $settingAble;
-
         return $this;
     }
 
-    public function getContext(): string|null
+    public function getContext(): string
     {
-        return $this->context;
+        return $this->context ?? 'app';
     }
 
     public function setContext($context)
     {
         $this->context = $context;
-
         return $this;
     }
 }

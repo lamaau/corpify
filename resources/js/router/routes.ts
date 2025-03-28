@@ -32,6 +32,14 @@ export default [
           title: "Dashboard",
         } as RouteMeta & IRouteMeta,
       },
+      {
+        path: "/settings",
+        name: "settings.index",
+        component: async () => await import("../pages/settings/index.vue"),
+        meta: {
+          title: "Setting",
+        } as RouteMeta & IRouteMeta,
+      },
     ],
   },
 ];

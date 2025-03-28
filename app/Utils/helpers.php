@@ -1,5 +1,15 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
+if (!function_exists('user')) {
+    function user(): User | null
+    {
+        return Auth::user();
+    }
+}
+
 if (!function_exists('format_number')) {
     function format_number($number, $decimals = 0)
     {

@@ -10,15 +10,13 @@ export function useAuth() {
     return !!document.cookie.includes("token=");
   }
 
-  // Set token in cookies
   function setToken(token: string) {
-    // Set secure, httpOnly cookie with appropriate options
     const isSecure = window.location.protocol === "https:";
+
     document.cookie = `token=${token}; path=/; samesite=strict; max-age=${60 * 60 * 24 * 7}${isSecure ? "; secure" : ""}`; // 7 days
     isAuthenticated.value = true;
   }
 
-  // Remove token from cookies
   function removeToken() {
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     isAuthenticated.value = false;
