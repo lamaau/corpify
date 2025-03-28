@@ -3,25 +3,40 @@
 namespace App\Actions;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Model;
 
 class Response
 {
     protected bool $status;
-
     protected array $data = [];
-
     protected ?string $message = null;
-
     protected int $code = 200;
+    protected ?array $pagination = null;
 
     public function __construct(bool $status)
     {
         $this->status = $status;
     }
 
-    public function data(array $data): self
+    public function data($data): self
     {
-        $this->data = $data;
+        if ($data instanceof LengthAwarePaginator || $data instanceof Paginator) {
+            $this->data = $data->items();
+            $this->pagination = [
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+                'total' => method_exists($data, 'total') ? $data->total() : null,
+                'next_page_url' => $data->nextPageUrl(),
+                'prev_page_url' => $data->previousPageUrl(),
+            ];
+        } elseif ($data instanceof Model) {
+            $this->data = $data->toArray();
+        } else {
+            $this->data = $data;
+        }
         return $this;
     }
 
@@ -49,11 +64,20 @@ class Response
 
     public function toJson(): JsonResponse
     {
-        return response()->json([
+        $response = [
             'success' => $this->status,
             'message' => $this->message,
-            'data' => !empty($this->data) ? $this->data : null,
-        ], $this->code);
+        ];
+
+        if (!empty($this->data)) {
+            $response['data'] = $this->data;
+        }
+
+        if (!empty($this->pagination)) {
+            $response['pagination'] = $this->pagination;
+        }
+
+        return response()->json($response, $this->code);
     }
 
     public function __toString(): string
