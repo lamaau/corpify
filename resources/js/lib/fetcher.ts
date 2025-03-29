@@ -74,6 +74,15 @@ const fetcher = {
       headers.set("X-XSRF-TOKEN", decodeURIComponent(csrfToken));
     }
 
+    const authToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
+
+    if (authToken) {
+      headers.set("Authorization", `Bearer ${decodeURIComponent(authToken)}`);
+    }
+
     return headers;
   },
 
@@ -105,11 +114,11 @@ const fetcher = {
       const contentType = response.headers.get("content-type");
       let responseData;
 
-      if (contentType?.includes("application/json")) {
-        responseData = await response.json();
-      } else {
-        responseData = await response.text();
-      }
+      // if (contentType?.includes("application/json")) {
+      responseData = await response.json();
+      // } else {
+      //   responseData = await response.text();
+      // }
 
       // Check response status AFTER parsing body
       if (!response.ok) {
@@ -130,7 +139,17 @@ const fetcher = {
 
   // HTTP method helpers
   get(url: string, options: RequestOptions = {}) {
-    return this.request("GET", url, undefined, options);
+    const defaultOptions: RequestOptions = {
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+    };
+
+    return this.request("GET", url, undefined, {
+      ...defaultOptions,
+      ...options,
+    });
   },
 
   post(url: string, data?: any, options: RequestOptions = {}) {

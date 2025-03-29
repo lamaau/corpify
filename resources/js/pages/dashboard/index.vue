@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import Page from "@/components/global-layout/basic-page.vue";
 import OverviewContent from "./components/overview-content.vue";
+import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 
 const tabs = ref([
   { name: "Overview", value: "overview" },
@@ -16,24 +17,24 @@ const activeTab = ref(tabs.value[0].value);
 <template>
   <Page title="workspace" description="workspace description" sticky>
     <template #actions>
-      <UiButton>Download</UiButton>
+      <Button>Download</Button>
     </template>
 
-    <UiTabs :default-value="activeTab" class="w-full">
-      <UiTabsList>
-        <UiTabsTrigger
+    <Tabs :default-value="activeTab" class="w-full">
+      <TabsList>
+        <TabsTrigger
           v-for="tab in tabs"
           :key="tab.value"
           :value="tab.value"
           :disabled="tab.disabled"
         >
           {{ tab.name }}
-        </UiTabsTrigger>
-      </UiTabsList>
-      <UiTabsContent value="overview" class="space-y-4">
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="overview" class="space-y-4">
         <OverviewContent />
-      </UiTabsContent>
-    </UiTabs>
+      </TabsContent>
+    </Tabs>
   </Page>
 </template>
 

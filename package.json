@@ -46,6 +46,7 @@
         "@radix-icons/vue": "^1.0.0",
         "@tanstack/eslint-plugin-query": "^5.62.16",
         "@tanstack/vue-query-devtools": "^5.64.1",
+        "@types/lodash": "^4.17.16",
         "@types/nprogress": "^0.2.3",
         "@vitejs/plugin-vue": "^5.2.1",
         "@vitejs/plugin-vue-jsx": "^4.1.1",

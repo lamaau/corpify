@@ -26,24 +26,9 @@ export function useSidebar() {
           icon: LayoutDashboard,
         },
         {
-          title: "Tasks",
-          url: "/tasks",
+          title: "Program",
+          url: "/programs",
           icon: ListTodo,
-        },
-        {
-          title: "Apps",
-          url: "/apps",
-          icon: Boxes,
-        },
-        {
-          title: "Users",
-          url: "/users",
-          icon: Users,
-        },
-        {
-          title: "Ai Talk Example",
-          url: "/ai-talk",
-          icon: Podcast,
         },
       ],
     },

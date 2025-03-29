@@ -12,6 +12,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('tags', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('taggables', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('tag_id')->constrained()->onDelete('cascade');
+            $table->morphs('taggable');
+            $table->timestamps();
+        });
+
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -61,6 +75,7 @@ return new class extends Migration
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
             $table->tinyText('caption')->nullable();
+            $table->string('status')->default('featured');
             $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
@@ -72,8 +87,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('program_features');
-        Schema::dropIfExists('program');
+        Schema::dropIfExists('programs');
+        Schema::dropIfExists('work_programs');
         Schema::dropIfExists('galleries');
+        Schema::dropIfExists('news');
+        Schema::dropIfExists('articles');
+        Schema::dropIfExists('tags');
+        Schema::dropIfExists('taggables');
         Schema::dropIfExists('contents');
     }
 };
