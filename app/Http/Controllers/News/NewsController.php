@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\News\StoreRequest;
 use App\Http\Requests\News\UpdateRequest;
+use Illuminate\Database\Eloquent\Builder;
 
 class NewsController extends Controller
 {
@@ -17,10 +18,20 @@ class NewsController extends Controller
      */
     public function index(Request $request)
     {
-        $query = News::query()->with('media')->paginate($request->query('per_page', 10));
+        $keyword = $request->get('search');
 
-        return Response::success()->data($query)->message('Succesfully');
+        $query = News::query()->with('media')
+            ->when($keyword, function (Builder $query) use ($keyword) {
+                $query->whereLike('title', "%{$keyword}%")
+                    ->orWhereHas('content', function (Builder $subQuery) use ($keyword) {
+                        $subQuery->whereLike('content', "%{$keyword}%");
+                    });
+            })
+            ->paginate($request->query('per_page', 10));
+
+        return Response::success()->data($query)->message('Successfully');
     }
+
 
     /**
      * Store a newly created resource in storage.

@@ -48,6 +48,7 @@ class GalleryController extends Controller
     public function destroy(Gallery $gallery)
     {
         return DB::transaction(function () use ($gallery) {
+            $gallery->clearMediaCollection('gallery');
             $gallery->delete();
 
             return Response::success()->message('Succesfully');

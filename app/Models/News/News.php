@@ -21,12 +21,6 @@ class News extends Model implements HasMedia
 
     protected $hidden = [
         'media',
-        'created_by',
-        'contentRelation',
-    ];
-
-    protected $with = [
-        'author',
     ];
 
     protected $appends = [

@@ -12,6 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('faqs', function (Blueprint $table) {
+            $table->id();
+            $table->longText('question');
+            $table->longText('answer');
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+        });
+
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
