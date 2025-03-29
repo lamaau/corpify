@@ -18,3 +18,10 @@
     - [x] Store
     - [x] Update
     - [x] Delete
+
+- [x] News
+
+    - [x] Index
+    - [x] Store
+    - [x] Update
+    - [x] Delete

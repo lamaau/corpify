@@ -55,6 +55,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -62,6 +63,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
