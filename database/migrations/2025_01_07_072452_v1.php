@@ -125,6 +125,14 @@ return new class extends Migration
             $table->foreignIdFor(User::class, 'user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
+
+        Schema::create('regulations', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('summary')->nullable();
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -132,6 +140,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('regulations');
         Schema::dropIfExists('member_positions');
         Schema::dropIfExists('member_categories');
         Schema::dropIfExists('members');

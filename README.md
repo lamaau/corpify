@@ -22,6 +22,12 @@
     - [x] Update
     - [x] Delete
 
+- [x] Regulations
+    - [x] Index
+    - [x] Store
+    - [x] Update
+    - [x] Delete
+
 - [ ] Members (Organization Hierarchy)
     - [x] Member Positions
         - [x] Index
