@@ -1,6 +1,10 @@
 <?php
 
+use App\Enums\Gallery\GalleryStatus;
+use App\Models\Member\MemberCategory;
+use App\Models\Member\MemberPosition;
 use App\Models\User;
+use App\Models\User\Profile;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,6 +16,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('profiles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('nip')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
             $table->longText('question');
@@ -85,8 +97,32 @@ return new class extends Migration
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
             $table->tinyText('caption')->nullable();
-            $table->string('status')->default('featured');
+            $table->string('status')->default(GalleryStatus::Featured());
             $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('member_positions', function (Blueprint $table) {
+            $table->id();
+            $table->string('member_position_name'); // Example: Ketua, Wakil, Anggota
+            $table->unsignedBigInteger('sort')->default(1);
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('member_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('member_category_name'); // Example: Pengurus Pusat, Dewan Penasehat ...
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('members', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(MemberPosition::class, 'member_position_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(MemberCategory::class, 'member_category_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Profile::class, 'profile_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -96,6 +132,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('member_positions');
+        Schema::dropIfExists('member_categories');
+        Schema::dropIfExists('members');
+        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('faqs');
         Schema::dropIfExists('program_features');
         Schema::dropIfExists('programs');
         Schema::dropIfExists('work_programs');

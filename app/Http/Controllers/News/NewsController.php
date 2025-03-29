@@ -32,7 +32,6 @@ class NewsController extends Controller
         return Response::success()->data($query)->message('Successfully');
     }
 
-
     /**
      * Store a newly created resource in storage.
      */
@@ -73,7 +72,6 @@ class NewsController extends Controller
             return Response::success()->data($news)->message('Successfully');
         });
     }
-
 
     /**
      * Remove the specified resource from storage.
