@@ -24,8 +24,9 @@ class SettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'app_hero_carousel' => ['nullable', 'array'],
-            'app_hero_carousel.*.summary' => ['nullable', 'string', 'max:255'],
+            'app_hero_carousel' => ['array'],
+            'app_hero_carousel.*.title' => ['required', 'string', 'max:255'],
+            'app_hero_carousel.*.summary' => ['required', 'string', 'max:255'],
             'app_hero_carousel.*.file' => ['nullable', 'file', 'mimes:jpeg,jpg,png,webp'],
             'app_hero_carousel.*.sort' => ['nullable', 'integer', 'min:1'],
 

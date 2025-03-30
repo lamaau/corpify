@@ -79,14 +79,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('articles', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('slug');
-            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
-            $table->timestamps();
-        });
-
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
             $table->morphs('model');
@@ -151,7 +143,6 @@ return new class extends Migration
         Schema::dropIfExists('work_programs');
         Schema::dropIfExists('galleries');
         Schema::dropIfExists('news');
-        Schema::dropIfExists('articles');
         Schema::dropIfExists('tags');
         Schema::dropIfExists('taggables');
         Schema::dropIfExists('contents');

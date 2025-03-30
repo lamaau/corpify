@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import ProfileForm from "./components/profile-form.vue";
+import AppForm from "./components/app-form.vue";
 import SettingsLayout from "./components/settings-layout.vue";
 </script>
 
 <template>
     <SettingsLayout>
-        <ProfileForm />
+        <AppForm />
     </SettingsLayout>
 </template>
