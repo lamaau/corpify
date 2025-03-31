@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\User\UserProfile;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -20,7 +22,6 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
     ];
@@ -34,6 +35,15 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $with = [
+        'profile',
+    ];
+
+    public function profile()
+    {
+        return $this->belongsTo(UserProfile::class, 'id', 'user_id');
+    }
 
     /**
      * Get the attributes that should be cast.

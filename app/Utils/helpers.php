@@ -3,6 +3,14 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+if (!function_exists('formatFileSize')) {
+    function formatFileSize(int $sizeInKB)
+    {
+        $sizeInMB = $sizeInKB / 1024; // Convert KB to MB
+        return number_format($sizeInMB, 0) . 'MB'; // Format without decimal places
+    }
+}
+
 if (!function_exists('user')) {
     function user(): User | null
     {

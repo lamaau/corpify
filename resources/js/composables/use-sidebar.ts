@@ -30,40 +30,21 @@ export function useSidebar() {
                     url: "/programs",
                     icon: ListTodo,
                 },
+                {
+                    title: "Gallery",
+                    url: "/gallery",
+                    icon: ListTodo,
+                },
             ],
         },
         {
-            title: "Pages",
+            title: "Feature",
             items: [
                 {
-                    title: "Auth",
+                    title: "About",
                     icon: SquareUserRound,
                     items: [
-                        { title: "Sign In", url: "/auth/sign-in" },
-                        { title: "Sign In(2 Col)", url: "/auth/sign-in-2" },
-                        { title: "Sign Up", url: "/auth/sign-up" },
-                        {
-                            title: "Forgot Password",
-                            url: "/auth/forgot-password",
-                        },
-                        { title: "OTP", url: "/auth/otp" },
-                    ],
-                },
-                {
-                    title: "Errors",
-                    icon: Bug,
-                    items: [
-                        { title: "401 | Unauthorized", url: "/errors/401" },
-                        { title: "403 | Forbidden", url: "/errors/403" },
-                        { title: "404 | Not Found", url: "/errors/404" },
-                        {
-                            title: "500 | Internal Server Error",
-                            url: "/errors/500",
-                        },
-                        {
-                            title: "503 | Maintenance Error",
-                            url: "/errors/503",
-                        },
+                        { title: "Organization", url: "/about/organization" },
                     ],
                 },
             ],

@@ -23,7 +23,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'caption' => ['nullable', 'string', 'max:255'],
+            'caption' => ['required', 'string', 'max:255'],
             'file' => ['required', 'file', 'mimes:jpeg,jpg,png,webp,pdf,mp4', 'max:5120'], // 5MB limit
         ];
     }

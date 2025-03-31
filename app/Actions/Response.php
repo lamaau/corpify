@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Response
 {
@@ -28,9 +29,12 @@ class Response
             $this->data = $data->toArray();
         } elseif ($data instanceof Model) {
             $this->data = $data->toArray();
+        } else if ($data instanceof Collection) {
+            $this->data = $data->toArray();
         } else {
             $this->data = $data;
         }
+
         return $this;
     }
 
@@ -63,7 +67,7 @@ class Response
             'message' => $this->message,
         ];
 
-        if (!empty($this->data)) {
+        if (!is_null($this->data)) {
             $response['data'] = $this->data;
         }
 

@@ -1,6 +1,8 @@
 import { type RouteMeta } from "vue-router";
 import ProgramRoutes from "./program";
 import SettingRoutes from "./setting";
+import GalleryRoutes from "./gallery";
+import AboutRoutes from "./about";
 
 interface IRouteMeta {
     title: string;
@@ -37,6 +39,8 @@ export default [
             },
             ...ProgramRoutes,
             ...SettingRoutes,
+            ...GalleryRoutes,
+            ...AboutRoutes,
         ],
     },
 ];

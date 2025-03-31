@@ -1,3 +1,4 @@
+import { useForm, useSetFormErrors } from "vee-validate";
 import { z } from "zod";
 
 // Types for configuration and options
@@ -17,6 +18,7 @@ const fetcher = {
         baseURL: import.meta.env.VITE_API_URL,
         headers: {
             Accept: "application/json",
+            "Content-Type": "application/json",
         },
     },
 
@@ -191,3 +193,35 @@ const fetcher = {
 };
 
 export default fetcher;
+
+export function handleFormSubmit<T>(
+    form: ReturnType<typeof useForm>,
+    submitFn: (data: any) => Promise<void>,
+) {
+    // Return a function that will be passed to form.handleSubmit
+    // This preserves the isSubmitting state management
+    return form.handleSubmit(async (values: any) => {
+        try {
+            await submitFn(values);
+        } catch (error: any) {
+            if (error?.response?.data?.errors) {
+                const validationErrors = error.response.data.errors;
+
+                // Format errors for vee-validate
+                const formattedErrors = Object.entries(validationErrors).reduce(
+                    (acc, [field, messages]) => {
+                        acc[field] = Array.isArray(messages)
+                            ? messages[0]
+                            : messages;
+                        return acc;
+                    },
+                    {} as Record<string, string>,
+                );
+
+                form.setErrors(formattedErrors);
+            }
+
+            throw error;
+        }
+    });
+}

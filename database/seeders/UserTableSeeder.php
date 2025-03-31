@@ -17,7 +17,6 @@ class UserTableSeeder extends Seeder
         Role::create(['name' => 'superadmin']);
 
         User::factory()->create([
-            'name' => 'Admin',
             'email' => 'superadmin@mail.com',
         ])->assignRole('superadmin');
     }

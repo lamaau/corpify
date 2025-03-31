@@ -8,5 +8,6 @@ enum GalleryStatus: string
 {
     use InvokableCases;
 
+    case Default = 'default';
     case Featured = 'featured';
 }
