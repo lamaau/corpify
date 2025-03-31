@@ -45,26 +45,6 @@ class OgController extends Controller
                 });
             })->values();
 
-        // ->map(function ($item) {
-        //     return [
-        //         'id' => (string)$item->id,
-        //         'parentId' => (string)$item->parent_id,
-        //         'user' => [
-        //             'id' => $item->user->id,
-        //             'email' => $item->user->email,
-        //             'avatar' => $item->user->avatar,
-        //         ],
-        //         'position' => [
-        //             'id' => $item->position->id,
-        //             'name' => $item->position->position_name,
-        //         ],
-        //         'category' => [
-        //             'id' => $item->category->id,
-        //             'name' => $item->category->position_category_name,
-        //         ],
-        //     ];
-        // });
-
         $grouped = $query->groupBy('category.name');
 
         return Response::success()->data($grouped)->message('Succesfully');
