@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useForm } from "vee-validate";
-import Select from "@/components/select.vue";
 import { toast } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,10 +24,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 
-const props = defineProps<{
-    open: boolean;
-    item: any;
-    children: any;
+defineProps<{
+    //
 }>();
 
 const isOpen = ref<boolean>(false);
@@ -36,21 +33,16 @@ const queryClient = useQueryClient();
 
 const { isSubmitting, ...form } = useForm({
     initialValues: {
-        user_id: null,
-        parent_id: props.item.id,
-        position_id: null,
-        position_category_id: props.item.category?.id ?? null,
+        position_category_name: null,
+        position_category_summary: null,
     },
 });
 
 const onSubmit = handleFormSubmit(form, async (data) => {
-    const newData = {
-        ...data,
-        user_id: data.user_id?.id ?? null,
-        position_id: data.position_id?.id ?? null,
-    };
-
-    const { message: description } = await fetcher.post(`/og`, newData);
+    const { message: description } = await fetcher.post(
+        `/position-categories`,
+        data,
+    );
 
     toast({ description });
     isOpen.value = false;
@@ -64,35 +56,32 @@ const onSubmit = handleFormSubmit(form, async (data) => {
         </DialogTrigger>
         <DialogContent>
             <DialogHeader class="flex flex-col gap-y-1.5">
-                <DialogTitle>Add new children</DialogTitle>
+                <DialogTitle>Add new</DialogTitle>
                 <DialogDescription>
-                    This will create new child based on current item
+                    This will create category of organization
                 </DialogDescription>
             </DialogHeader>
-            <FormField v-slot="{ componentField }" name="user_id">
+
+            <FormField
+                v-slot="{ componentField }"
+                name="position_category_name"
+            >
                 <FormItem>
-                    <FormLabel>Account</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
-                        <Select
-                            v-bind="componentField"
-                            api-url="/users"
-                            :id-key="(user: any) => user.id"
-                            :name-key="(user: any) => `${user.profile.name}`"
-                        />
+                        <Input type="text" v-bind="componentField" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
             </FormField>
-            <FormField v-slot="{ componentField }" name="position_id">
+            <FormField
+                v-slot="{ componentField }"
+                name="position_category_summary"
+            >
                 <FormItem>
-                    <FormLabel>Position</FormLabel>
+                    <FormLabel>Summary</FormLabel>
                     <FormControl>
-                        <Select
-                            v-bind="componentField"
-                            api-url="/positions"
-                            id-key="id"
-                            name-key="position_name"
-                        />
+                        <Textarea type="text" v-bind="componentField" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>

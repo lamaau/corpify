@@ -10,4 +10,6 @@ Route::apiResource('/programs', App\Http\Controllers\Program\ProgramController::
 Route::apiResource('/news', App\Http\Controllers\News\NewsController::class);
 Route::apiResource('/faqs', App\Http\Controllers\Faq\FaqController::class);
 Route::apiResource('/regulations', App\Http\Controllers\Regulation\RegulationController::class);
+Route::apiResource('/positions', App\Http\Controllers\Position\PositionController::class);
+Route::apiResource('/position-categories', App\Http\Controllers\PositionCategory\PositionCategoryController::class);
 Route::apiResource('/og', App\Http\Controllers\Og\OgController::class);

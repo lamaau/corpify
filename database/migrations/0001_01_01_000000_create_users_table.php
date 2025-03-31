@@ -52,22 +52,24 @@ return new class extends Migration
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
             $table->string('position_name'); // Example: Ketua, Wakil, Anggota
+            $table->tinyText('position_summary')->nullable();
             $table->unsignedBigInteger('sort')->default(1);
-            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'created_by')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
         Schema::create('position_categories', function (Blueprint $table) {
             $table->id();
             $table->string('position_category_name'); // Example: Dewan Pengurus Pusat, Dewan Penasehat, Dewan Pengurus Cabang ...
-            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
+            $table->tinyText('position_category_summary')->nullable();
+            $table->foreignIdFor(User::class, 'created_by')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
         Schema::create('position_assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class, 'user_id')->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Position::class, 'position_id')->constrained()->cascadeOnDelete(); // Position (Ketua, Wakil Ketua, etc.)
+            $table->foreignIdFor(User::class, 'user_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Position::class, 'position_id')->nullable()->constrained()->cascadeOnDelete(); // Position (Ketua, Wakil Ketua, etc.)
             $table->foreignIdFor(PositionCategory::class, 'position_category_id')->constrained()->cascadeOnDelete(); // Category (DPP, DPC, etc.)
             $table->foreignId('parent_id')->nullable()->constrained('position_assignments')->nullOnDelete(); // Parent position recursive here guys 😱
             $table->timestamps();

@@ -195,7 +195,7 @@ const fetcher = {
 export default fetcher;
 
 export function handleFormSubmit<T>(
-    form: ReturnType<typeof useForm>,
+    form: Pick<ReturnType<typeof useForm>, "handleSubmit" | "setErrors">,
     submitFn: (data: any) => Promise<void>,
 ) {
     // Return a function that will be passed to form.handleSubmit

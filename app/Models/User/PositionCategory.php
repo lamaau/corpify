@@ -2,23 +2,31 @@
 
 namespace App\Models\User;
 
-use App\Models\User;
 use App\Models\User\PositionAssignment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PositionCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['position_category_name', 'created_by'];
+    protected $fillable = [
+        'position_category_name',
+        'position_category_summary',
+    ];
 
-    public function creator()
+    protected static function booted(): void
     {
-        return $this->belongsTo(User::class, 'created_by');
+        // set default value to keep every recursive og have default one
+        static::created(function (PositionCategory $model) {
+            $model->assignments()->create([
+                // 
+            ]);
+        });
     }
 
-    public function assignments()
+    public function assignments(): HasMany
     {
         return $this->hasMany(PositionAssignment::class);
     }

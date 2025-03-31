@@ -42,7 +42,6 @@ const handleFile = (file: File | null) => {
     form.setFieldValue("file", file as any);
 };
 
-// @ts-ignore
 const onSubmit = handleFormSubmit(form, async (data) => {
     const formData = new FormData();
     formData.append("_method", "PUT");

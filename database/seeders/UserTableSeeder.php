@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User\UserProfile;
 use Spatie\Permission\Models\Role;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserTableSeeder extends Seeder
 {
@@ -14,10 +15,16 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create(['name' => 'superadmin']);
+        $superadmin = Role::create(['name' => 'superadmin']);
+        $member = Role::create(['name' => 'member']);
+
+        User::factory(100)->create()->each(function ($user, $index) use ($member) {
+            UserProfile::factory()->create(['user_id' => $user->id, 'name' => "User {$index} profile"]);
+            $user->assignRole($member);
+        });
 
         User::factory()->create([
             'email' => 'superadmin@mail.com',
-        ])->assignRole('superadmin');
+        ])->assignRole($superadmin);
     }
 }

@@ -1,13 +1,32 @@
 import fetcher from "@/lib/fetcher";
-import { useQuery } from "@tanstack/vue-query";
+import { ogQueryKeys } from "@/enums/query-keys";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
 export function useOg() {
-    return useQuery({
-        queryKey: ["og"],
-        queryFn: async () => {
-            const { data } = await fetcher.get("/og");
+    const queryClient = useQueryClient();
 
-            return data;
-        },
-    });
+    const fetchOg = () => {
+        return useQuery({
+            queryKey: ogQueryKeys.all,
+            queryFn: async () => {
+                const { data } = await fetcher.get("/og");
+
+                return data;
+            },
+        });
+    };
+
+    const deleteOg = (id: string) => {
+        return useMutation({
+            mutationKey: ogQueryKeys.detail(id),
+            mutationFn: async () => {
+                return await fetcher.delete(`/og/${id}`);
+            },
+            onSuccess: () => {
+                queryClient.invalidateQueries(ogQueryKeys.all as any);
+            },
+        });
+    };
+
+    return { fetchOg, deleteOg };
 }

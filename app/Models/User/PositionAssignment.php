@@ -11,7 +11,12 @@ class PositionAssignment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'position_id', 'position_category_id', 'parent_id'];
+    protected $fillable = [
+        'user_id',
+        'position_id',
+        'position_category_id',
+        'parent_id'
+    ];
 
     public function user()
     {
