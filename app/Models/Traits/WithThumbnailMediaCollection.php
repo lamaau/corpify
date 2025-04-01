@@ -10,7 +10,7 @@ trait WithThumbnailMediaCollection
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('thumbnail')
+        $this->addMediaCollection('thumbnails')
             ->acceptsMimeTypes(['image/jpeg', 'image/png'])
             ->singleFile();
     }

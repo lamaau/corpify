@@ -4,6 +4,7 @@ import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
 
 const props = defineProps<{
+    label: string;
     error?: string;
     file?: string; // Can be an external URL
 }>();
@@ -84,7 +85,9 @@ const removeImage = () => {
 
 <template>
     <div>
-        <Label class="block mb-2">Upload Image</Label>
+        <Label :class="cn('block mb-2', error && 'text-destructive')">
+            {{ label }}
+        </Label>
         <div
             :class="
                 cn(

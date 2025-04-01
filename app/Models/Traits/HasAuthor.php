@@ -10,7 +10,9 @@ trait HasAuthor
     public static function bootHasAuthor()
     {
         static::creating(function ($model) {
-            $model->mergeFillable(['created_by'])->fill(['created_by' => user()->id]);
+            if (!app()->runningInConsole()) {
+                $model->mergeFillable(['created_by'])->fill(['created_by' => user()->id]);
+            }
         });
 
         static::retrieved(function ($model) {

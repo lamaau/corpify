@@ -1,9 +1,16 @@
-<script setup>
-import { computed } from "vue";
-import { PlusCircledIcon, CheckIcon } from "@radix-icons/vue";
-
+<script setup lang="ts">
+import { computed, watch } from "vue";
+import { cn } from "@/lib/utils";
+import { XIcon } from "lucide-vue-next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { PlusCircledIcon, CheckIcon } from "@radix-icons/vue";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import {
     Command,
     CommandEmpty,
@@ -13,31 +20,38 @@ import {
     CommandList,
     CommandSeparator,
 } from "@/components/ui/command";
+import { Column } from "@tanstack/vue-table";
+import { FacetedFilterOption } from "@/types/datatable";
 
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+interface DataTableFacetedFilter<T = unknown> {
+    title: string;
+    column?: Column<T, any>;
+    options: FacetedFilterOption[];
+}
 
-const props = defineProps({
-    column: { type: [Object, String] },
-    title: { type: String },
-    options: { type: Object },
-});
+const props = defineProps<DataTableFacetedFilter>();
+const emit = defineEmits(["onFilter"]);
 
 const facets = computed(() => props.column?.getFacetedUniqueValues());
-const selectedValues = computed(() => new Set(props.column?.getFilterValue()));
-</script>
+const selectedValues = computed(
+    () => new Set(props.column?.getFilterValue() as any),
+);
 
+const filterFunction = (
+    list: DataTableFacetedFilter["options"],
+    term: string,
+) => list.filter((i) => i.name.toLowerCase()?.includes(term));
+
+watch(selectedValues, (newSelectedValue) => {
+    emit("onFilter", newSelectedValue);
+});
+</script>
 <template>
     <Popover>
         <PopoverTrigger as-child>
             <Button variant="outline" size="sm" class="h-8 border-dashed">
-                <PlusCircledIcon class="mr-2 h-4 w-4" />
-                {{ title }}
+                <PlusCircledIcon class="h-4 w-4" />
+                <span>{{ title }}</span>
                 <template v-if="selectedValues.size > 0">
                     <Separator orientation="vertical" class="mx-2 h-4" />
                     <Badge
@@ -64,7 +78,7 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue()));
                                 variant="secondary"
                                 class="rounded-sm px-1 font-normal"
                             >
-                                {{ option.label }}
+                                {{ option.name }}
                             </Badge>
                         </template>
                     </div>
@@ -72,14 +86,7 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue()));
             </Button>
         </PopoverTrigger>
         <PopoverContent class="w-[200px] p-0" align="start">
-            <Command
-                :filter-function="
-                    (list, term) =>
-                        list.filter((i) =>
-                            i.label.toLowerCase()?.includes(term),
-                        )
-                "
-            >
+            <Command :filter-function="filterFunction">
                 <CommandInput :placeholder="title" />
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
@@ -120,11 +127,8 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue()));
                             >
                                 <CheckIcon :class="cn('h-4 w-4')" />
                             </div>
-                            <option.icon
-                                v-if="option.icon"
-                                class="mr-2 h-4 w-4 text-muted-foreground"
-                            />
-                            <span>{{ option.label }}</span>
+                            <component v-if="option.icon" :is="option.icon" />
+                            <span>{{ option.name }}</span>
                             <span
                                 v-if="facets?.get(option.value)"
                                 class="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs"
@@ -150,4 +154,14 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue()));
             </Command>
         </PopoverContent>
     </Popover>
+    <Button
+        v-show="selectedValues.size > 0"
+        size="sm"
+        class="h-8"
+        variant="ghost"
+        @click="column?.setFilterValue(undefined)"
+    >
+        Reset
+        <XIcon class="h-4 w-4" />
+    </Button>
 </template>

@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::query()->latest()->paginate($request->query('per_page', 10));
+        $query = User::query()->withWhereHas('profile')->latest()->paginate($request->query('per_page', 10));
 
         return Response::success()->data($query)->message('Succesfully');
     }

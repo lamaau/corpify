@@ -33,7 +33,7 @@ watch(data, ({ message }) => {
         <AlertDialogTrigger as-child>
             <slot />
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent class="w-max">
             <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -48,7 +48,7 @@ watch(data, ({ message }) => {
                 </AlertDialogCancel>
                 <Button
                     :disabled="isPending"
-                    class="destructive"
+                    variant="destructive"
                     @click="onDelete"
                 >
                     Delete

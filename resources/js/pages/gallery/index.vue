@@ -3,6 +3,7 @@ import { createColumns } from "./table";
 import { ref, onMounted, shallowRef } from "vue";
 import { DataTable } from "@/components/datatable";
 import CreateForm from "./components/create-form.vue";
+import BasicPage from "@/components/global-layout/basic-page.vue";
 
 const tableRef = shallowRef();
 const isDialogOpen = ref(false);
@@ -14,9 +15,15 @@ onMounted(() => {
 </script>
 
 <template>
-    <DataTable ref="tableRef" url="/galleries" :columns="columns">
-        <template #toolbar>
+    <BasicPage
+        title="Publication"
+        description="This show all of your publication"
+    >
+        <template #actions>
             <CreateForm :isOpen="isDialogOpen" :tableRef="tableRef" />
         </template>
-    </DataTable>
+
+        <DataTable ref="tableRef" url="/galleries" :columns="columns">
+        </DataTable>
+    </BasicPage>
 </template>

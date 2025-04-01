@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             ->call(ProgramTableSeeder::class)
             ->call(FaqTableSeeder::class)
             ->call(PositionTableSeeder::class)
-            ->call(PositionCategoryTableSeeder::class);
+            ->call(PositionCategoryTableSeeder::class)
+            ->call(PostCategoryTableSeeder::class)
+            ->call(PostTableSeeder::class);
     }
 }

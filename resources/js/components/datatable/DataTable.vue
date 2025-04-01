@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useQuery } from "@tanstack/vue-query";
 import { valueUpdater } from "@/lib/utils";
-import { onMounted, ref, useSlots } from "vue";
+import DataTableToolbar from "./DataTableToolbar.vue";
 import DataTablePagination from "./DataTablePagination.vue";
 import { FlexRender, useVueTable, getCoreRowModel } from "@tanstack/vue-table";
 import {
@@ -11,51 +13,55 @@ import {
     TableHead,
     TableHeader,
 } from "@/components/ui/table";
-import DataTableToolbar from "./DataTableToolbar.vue";
 import fetcher from "@/lib/fetcher";
-
-const slots = useSlots();
+import { tableQueryKeys } from "@/enums/query-keys";
 
 const props = defineProps({
     columns: { type: Object, required: true },
     url: { type: String, required: true },
 });
 
-const data = ref({});
 const sorting = ref([]);
-const loading = ref(false);
 const rowSelection = ref({});
 const columnFilters = ref([]);
 const columnVisibility = ref({});
+const queryParams = ref({});
 
-const fetch = async (params: any = {}) => {
-    loading.value = true;
+// Create a function to fetch data that will be used by the query
+const fetchData = async (params: Record<string, any> = {}) => {
+    // Remove empty parameters
+    const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([_, value]) => value !== ""),
+    );
 
-    try {
-        const { data: apiResponse } = await fetcher.get(props.url, {
-            params: params,
-        });
+    const { data: apiResponse } = await fetcher.get(props.url, {
+        params: Object.keys(filteredParams).length ? filteredParams : undefined,
+    });
 
-        data.value = apiResponse;
-
-        return await apiResponse;
-    } catch (error) {
-        console.log(error);
-    } finally {
-        loading.value = false;
-    }
+    return apiResponse;
 };
 
+const { data, isLoading, refetch } = useQuery({
+    queryKey: tableQueryKeys.lists(props.url),
+    queryFn: () => fetchData(queryParams.value),
+});
+
 const reload = () => {
-    fetch();
+    refetch();
+};
+
+const fetch = async (params: Record<string, any> = {}) => {
+    queryParams.value = params;
+    return refetch();
 };
 
 onMounted(() => {
-    fetch();
+    // Initial fetch is handled by the useQuery hook automatically
 });
 
 defineExpose({
     reload,
+    fetch,
 });
 
 const handleQueryChanged = (params: any) => {
@@ -68,9 +74,12 @@ const handleOnSearch = (query: any) => {
 
 const table = useVueTable({
     manualPagination: true,
-    pageCount: data.value.to ?? 0,
+    // Use optional chaining to prevent errors when data is not yet loaded
+    get pageCount() {
+        return data.value?.to ?? 0;
+    },
     get data() {
-        return data.value.data ?? [];
+        return data.value?.data ?? [];
     },
     get columns() {
         return props.columns as any;
@@ -102,28 +111,18 @@ const table = useVueTable({
 });
 </script>
 <template>
-    <div class="flex-1 overflow-auto">
-        <div
-            class="inline-flex items-center w-full pt-4"
-            :class="{
-                'justify-between': slots.toolbar,
-                'justify-end': !slots.toolbar,
-            }"
+    <div class="flex-1 overflow-auto px-4 py-4">
+        <DataTableToolbar
+            :table="table"
+            :search="{ loading: isLoading }"
+            @on-search="handleOnSearch"
         >
-            <slot name="toolbar" />
-            <DataTableToolbar
-                :table
-                :toolbars="{
-                    search: {
-                        loading: loading,
-                        placeholder: 'Cari disini.',
-                    },
-                }"
-                @on-search="handleOnSearch"
-            />
-        </div>
+            <template #left-toolbar>
+                <slot name="left-toolbar" :table="table" />
+            </template>
+        </DataTableToolbar>
 
-        <template v-if="Object.keys(data).length">
+        <template v-if="data">
             <div class="rounded-md border mb-4">
                 <Table>
                     <TableHeader>
@@ -167,7 +166,8 @@ const table = useVueTable({
                                 :colspan="columns.length"
                                 class="h-24 text-center text-muted-foreground"
                             >
-                                Tidak ada hasil untuk ditampilkan.
+                                <span v-if="isLoading">Loading data...</span>
+                                <span v-else>Nothing found to display</span>
                             </TableCell>
                         </TableRow>
                     </TableBody>
@@ -175,6 +175,7 @@ const table = useVueTable({
             </div>
 
             <DataTablePagination
+                v-if="data"
                 :table="table"
                 :total="data.total"
                 :from="data.from"

@@ -1,10 +1,12 @@
 <?php
 
-use App\Enums\Gallery\GalleryStatus;
 use App\Models\User;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Enums\Post\PostStatus;
+use App\Models\Post\PostCategory;
+use App\Enums\Gallery\GalleryStatus;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -60,18 +62,23 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('news', function (Blueprint $table) {
+        Schema::create('post_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('slug');
+            $table->string('category_name');
+            $table->tinyText('category_summary')->nullable();
             $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
-        Schema::create('contents', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->morphs('model');
-            $table->longText('content');
+            $table->string('title');
+            $table->string('slug')->unique()->index();
+            $table->text('summary')->nullable();
+            $table->longText('body');
+            $table->tinyInteger('status')->default(PostStatus::Published());
+            $table->foreignIdFor(PostCategory::class, 'post_category_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -97,6 +104,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('post_categories');
+        Schema::dropIfExists('posts');
         Schema::dropIfExists('regulations');
         Schema::dropIfExists('profiles');
         Schema::dropIfExists('faqs');
@@ -104,7 +113,6 @@ return new class extends Migration
         Schema::dropIfExists('programs');
         Schema::dropIfExists('work_programs');
         Schema::dropIfExists('galleries');
-        Schema::dropIfExists('news');
         Schema::dropIfExists('tags');
         Schema::dropIfExists('taggables');
         Schema::dropIfExists('contents');

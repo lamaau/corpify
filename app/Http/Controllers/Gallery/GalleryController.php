@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Gallery\Gallery;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\Gallery\StoreRequest;
 use App\Http\Requests\Gallery\UpdateRequest;
 
@@ -17,7 +18,9 @@ class GalleryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Gallery::query()->with('media')->latest()->paginate($request->query('per_page', 10));
+        $query = Gallery::query()->with('media')
+            ->when($request->get('search'), fn(Builder $query, $keyword) => $query->whereLike('caption', "%{$keyword}%"))
+            ->latest()->paginate($request->query('per_page', 10));
 
         return Response::success()->data($query)->message('Successfully get galleries');
     }

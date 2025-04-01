@@ -1,16 +1,10 @@
 import { ref } from "vue";
 import type { NavGroup } from "@/components/app-sidebar/types";
 import {
-    BadgeHelp,
-    Boxes,
-    Bug,
+    ListTodo,
+    Settings,
     CreditCard,
     LayoutDashboard,
-    ListTodo,
-    Podcast,
-    Settings,
-    SquareUserRound,
-    Users,
 } from "lucide-vue-next";
 
 export function useSidebar() {
@@ -21,9 +15,39 @@ export function useSidebar() {
             title: "General",
             items: [
                 {
+                    title: "Overview",
+                    url: "/overview",
+                    icon: ListTodo,
+                },
+                {
                     title: "Dashboard",
                     url: "/dashboard",
                     icon: LayoutDashboard,
+                },
+            ],
+        },
+        {
+            title: "Publication",
+            items: [
+                {
+                    title: "Category",
+                    icon: ListTodo,
+                    url: "/publication/category",
+                },
+                {
+                    title: "Publication",
+                    icon: ListTodo,
+                    url: "/publication/post",
+                },
+            ],
+        },
+        {
+            title: "Website",
+            items: [
+                {
+                    title: "Gallery",
+                    url: "/gallery",
+                    icon: ListTodo,
                 },
                 {
                     title: "Program",
@@ -31,21 +55,9 @@ export function useSidebar() {
                     icon: ListTodo,
                 },
                 {
-                    title: "Gallery",
-                    url: "/gallery",
+                    title: "Organization",
                     icon: ListTodo,
-                },
-            ],
-        },
-        {
-            title: "Feature",
-            items: [
-                {
-                    title: "About",
-                    icon: SquareUserRound,
-                    items: [
-                        { title: "Organization", url: "/about/organization" },
-                    ],
+                    url: "/about/organization",
                 },
             ],
         },

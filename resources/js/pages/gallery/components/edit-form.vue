@@ -97,6 +97,7 @@ const onSubmit = handleFormSubmit(form, async (data) => {
                     </FormField>
                 </div>
                 <FileUpload
+                    label="Upload image"
                     :file="row.file?.file_url"
                     @file-selected="handleFile"
                     :error="form.errors.value?.file"

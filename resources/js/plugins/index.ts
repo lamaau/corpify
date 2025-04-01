@@ -6,6 +6,7 @@ import { setupOgChart } from "./og-chart";
 import { setupNProgress } from "./nprogress";
 import { setupAutoAnimate } from "./auto-animate";
 import { setupTanstackVueQuery } from "./tanstack-vue-query";
+import { setupEchoEditor } from "./echo-editor";
 
 export function setupPlugins(app: App) {
     setupDayjs();
@@ -13,6 +14,7 @@ export function setupPlugins(app: App) {
     setupPinia(app);
     setupNProgress();
     setupOgChart(app);
+    setupEchoEditor(app);
     setupAutoAnimate(app);
     setupTanstackVueQuery(app);
 }

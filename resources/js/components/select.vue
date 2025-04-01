@@ -1,24 +1,22 @@
 <script setup lang="ts">
 import fetcher from "@/lib/fetcher";
-import { ref, watch, computed, useSlots } from "vue";
+import { ref, watch, computed, nextTick } from "vue";
+import { cn, debounce } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command";
+import { Check, ChevronsUpDown, SearchIcon } from "lucide-vue-next";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn, debounce } from "@/lib/utils";
-import { Check, ChevronsUpDown } from "lucide-vue-next";
+import {
+    Command,
+    CommandGroup,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command";
+import { Primitive } from "reka-ui";
 
-// Props for reusability
 const props = defineProps({
     modelValue: { type: Object, default: null },
     apiUrl: {
@@ -55,24 +53,31 @@ const props = defineProps({
     },
 });
 
-const slots = useSlots();
-const open = ref(false);
 const value = ref("");
-const searchQuery = ref("");
 const items = ref([]);
+const open = ref(false);
+const searchQuery = ref("");
 const isLoading = ref(false);
+const searchRef = ref<HTMLInputElement | null>(null);
 
 const emit = defineEmits(["update:modelValue"]);
 
 const fetchData = async () => {
     isLoading.value = true;
+
+    const params = { search: searchQuery.value };
+
+    const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([_, value]) => value !== ""),
+    );
+
     try {
         const {
             data: { data },
         } = await fetcher.get(props.apiUrl, {
-            params: {
-                search: searchQuery.value,
-            },
+            params: Object.keys(filteredParams).length
+                ? filteredParams
+                : undefined,
         });
 
         items.value = data;
@@ -95,17 +100,16 @@ watch(
     { immediate: true },
 );
 
-// Get display value dynamically based on the nameKey
-const getDisplayValue = (item) => {
+const getDisplayValue = (item: any) => {
     if (!item) return "";
     if (typeof props.nameKey === "function") {
         return props.nameKey(item);
     }
+
     return item[props.nameKey];
 };
 
-// Get ID value dynamically based on the idKey
-const getIdValue = (item) => {
+const getIdValue = (item: any) => {
     if (!item) return "";
     if (typeof props.idKey === "function") {
         return props.idKey(item);
@@ -132,17 +136,29 @@ watch(
     { immediate: true },
 );
 
-// Emit selected item when value changes
 watch(selectedLabel, (newSelectedItem) => {
     emit("update:modelValue", newSelectedItem || null);
 });
 
-// Handle item selection
-const handleSelect = (item) => {
+const handleSelect = (item: any) => {
     value.value = getIdValue(item);
     emit("update:modelValue", item);
     open.value = false;
 };
+
+const onCommandMounted = () => {
+    nextTick(() => {
+        setTimeout(() => searchRef.value?.focus());
+    });
+};
+
+const isSelected = computed(() => {
+    return (item: any) =>
+        (!value.value &&
+            props.modelValue &&
+            getIdValue(props.modelValue) === getIdValue(item)) ||
+        value.value === getIdValue(item);
+});
 </script>
 <template>
     <Popover v-model:open="open">
@@ -174,26 +190,36 @@ const handleSelect = (item) => {
             </Button>
         </PopoverTrigger>
         <PopoverContent class="w-full p-0">
-            <Command>
-                <!-- Custom input slot -->
+            <Command @vue:mounted="onCommandMounted">
                 <slot name="input">
-                    <CommandInput
-                        :placeholder="placeholder"
-                        :model-value="searchQuery"
-                        @input="searchQuery = $event.target.value"
-                    />
+                    <div
+                        class="flex items-center border-b px-3"
+                        cmdk-input-wrapper
+                    >
+                        <SearchIcon class="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                        <input
+                            ref="searchRef"
+                            v-model="searchQuery"
+                            :class="
+                                cn(
+                                    'flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+                                )
+                            "
+                        />
+                    </div>
                 </slot>
 
-                <!-- Custom empty slot -->
-                <slot name="empty" :is-loading="isLoading">
-                    <CommandEmpty>
+                <Primitive
+                    v-show="!items.length || isLoading"
+                    class="py-6 text-center text-sm"
+                >
+                    <slot name="empty" :is-loading="isLoading">
                         {{ isLoading ? loadingMessage : emptyMessage }}
-                    </CommandEmpty>
-                </slot>
+                    </slot>
+                </Primitive>
 
-                <CommandList>
+                <CommandList v-show="!isLoading && items.length">
                     <CommandGroup>
-                        <!-- Custom item slot -->
                         <template v-for="item in items" :key="getIdValue(item)">
                             <slot
                                 name="item"
@@ -211,16 +237,20 @@ const handleSelect = (item) => {
                                 <CommandItem
                                     :value="getIdValue(item)"
                                     @select="() => handleSelect(item)"
+                                    :class="
+                                        cn(
+                                            // i dont know why but make like this, the bg will applied correctly 😎
+                                            'data-[highlighted]:bg-transparent data-[highlighted]:text-primary',
+                                            isSelected(item) &&
+                                                'bg-accent text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground',
+                                        )
+                                    "
                                 >
                                     <Check
                                         :class="
                                             cn(
                                                 'mr-2 h-4 w-4',
-                                                (!value &&
-                                                    modelValue &&
-                                                    getIdValue(modelValue) ===
-                                                        getIdValue(item)) ||
-                                                    value === getIdValue(item)
+                                                isSelected(item)
                                                     ? 'opacity-100'
                                                     : 'opacity-0',
                                             )

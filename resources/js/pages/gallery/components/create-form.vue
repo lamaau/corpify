@@ -17,12 +17,14 @@ import {
     FormControl,
     FormField,
     FormItem,
+    FormLabel,
     FormMessage,
 } from "@/components/ui/form";
 import fetcher, { handleFormSubmit } from "@/lib/fetcher";
 import { toast } from "@/components/ui/toast";
 import { useForm } from "vee-validate";
 import { cn } from "@/lib/utils";
+import { PlusIcon } from "lucide-vue-next";
 
 const emit = defineEmits(["update:isOpen", "submit"]);
 const props = defineProps<{ isOpen: boolean; tableRef: any }>();
@@ -59,8 +61,9 @@ const onSubmit = handleFormSubmit(form, async (data) => {
 <template>
     <Dialog v-model:open="isDialogOpen">
         <DialogTrigger asChild>
-            <Button size="sm" variant="default" @click="isDialogOpen = true">
-                Tambah
+            <Button @click="isDialogOpen = true">
+                Add New
+                <PlusIcon />
             </Button>
         </DialogTrigger>
         <DialogContent class="max-w-2xl">
@@ -76,7 +79,7 @@ const onSubmit = handleFormSubmit(form, async (data) => {
                     <FormField v-slot="{ componentField }" name="caption">
                         <FormItem>
                             <FormControl>
-                                <Label>Caption</Label>
+                                <FormLabel>Caption</FormLabel>
                                 <Textarea
                                     v-bind="componentField"
                                     :class="
@@ -92,6 +95,7 @@ const onSubmit = handleFormSubmit(form, async (data) => {
                     </FormField>
                 </div>
                 <FileUpload
+                    label="Upload image"
                     @file-selected="handleFile"
                     :error="form.errors.value?.file"
                 />

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Requests\News;
+namespace App\Http\Requests\Post;
 
+use App\Enums\Post\PostStatus;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreRequest extends FormRequest
 {
@@ -25,23 +27,20 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', Rule::unique('news', 'title'), 'max:255'],
-            'file' => ['required', 'file', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
-            'slug' => ['required', Rule::unique('news', 'slug')],
+            'title' => ['required', Rule::unique('posts', 'title'), 'max:255'],
+            'summary' => ['nullable', 'string', 'max:255'],
             'body' => ['required', 'string'],
+            'status' => ['required', new Enum(PostStatus::class)],
+            'post_category_id' => ['required', Rule::exists('post_categories', 'id')],
+            'file' => ['required', 'file', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
         ];
     }
 
-    public function getNewsData(): array
+    public function getData(): array
     {
-        return collect($this->validated())->only(['title'])->merge([
+        return collect($this->validated())->except('file')->merge([
             'slug' => Str::slug($this->title) . '-' . now(),
             'created_by' => $this->user()->id,
         ])->all();
-    }
-
-    public function getNewsContent(): array
-    {
-        return ['content' => $this->body];
     }
 }
