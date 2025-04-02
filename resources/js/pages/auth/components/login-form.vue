@@ -78,12 +78,12 @@ const onSubmit = () => {
                 Login
             </Button>
 
-            <CardDescription>
+            <!-- <CardDescription>
                 By clicking login, you agree to our
                 <TermsOfServiceButton />
                 and
                 <PrivacyPolicyButton />
-            </CardDescription>
+            </CardDescription> -->
         </CardContent>
     </Card>
 </template>

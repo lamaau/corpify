@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Constants;
+namespace App\Http\Controllers\Constant;
 
 use App\Actions\Pagination;
 use App\Actions\Response;

@@ -29,6 +29,7 @@ import {
     CardContent,
     CardDescription,
 } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 const router = useRouter();
 const queryClient = useQueryClient();
@@ -65,6 +66,7 @@ const fillValues = () => {
 
         form.setValues({
             title: detailPostQuery.value.title,
+            summary: detailPostQuery.value.summary,
             status: {
                 value: detailPostQuery.value.status.value,
                 name: detailPostQuery.value.status.name,
@@ -138,6 +140,16 @@ const onSubmit = form.handleSubmit(async (data) => {
                                 <FormControl class="flex flex-col gap-y-2">
                                     <Label>Title</Label>
                                     <Input v-bind="componentField" />
+                                    <FormMessage />
+                                </FormControl>
+                            </FormItem>
+                        </FormField>
+
+                        <FormField v-slot="{ componentField }" name="summary">
+                            <FormItem>
+                                <FormLabel>Summary</FormLabel>
+                                <FormControl class="flex flex-col gap-y-2">
+                                    <Textarea v-bind="componentField" />
                                     <FormMessage />
                                 </FormControl>
                             </FormItem>

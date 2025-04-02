@@ -85,7 +85,7 @@ watch(selectedValues, (newSelectedValue) => {
                 </template>
             </Button>
         </PopoverTrigger>
-        <PopoverContent class="w-[200px] p-0" align="start">
+        <PopoverContent class="w-min p-0" align="start">
             <Command :filter-function="filterFunction">
                 <CommandInput :placeholder="title" />
                 <CommandList>

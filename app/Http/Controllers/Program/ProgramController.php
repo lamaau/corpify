@@ -17,7 +17,9 @@ class ProgramController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Program::query()->with(['features'])->paginate($request->query('per_page', 10));
+        $query = Program::query()->with(['features'])
+            ->applySearchWhen(value: $request->get('search'), columns: ['name', 'features.feature_name'])
+            ->latest()->paginate($request->query('per_page', 10));
 
         return Response::success()->data($query)->message('Succesfully');
     }

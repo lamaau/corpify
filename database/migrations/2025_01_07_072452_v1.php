@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Enums\Post\PostStatus;
+use App\Enums\Program\WorkProgramStatus;
 use App\Models\Post\PostCategory;
 use App\Enums\Gallery\GalleryStatus;
 use Illuminate\Support\Facades\Schema;
@@ -47,7 +48,7 @@ return new class extends Migration
 
         Schema::create('program_features', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->foreignId('program_id')->constrained()->cascadeOnDelete();
             $table->string('icon');
             $table->string('feature_name');
             $table->boolean('is_available')->default(true);
@@ -59,6 +60,10 @@ return new class extends Migration
             $table->foreignId('program_id')->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->string('slug');
+            $table->text('summary')->nullable();
+            $table->longText('body');
+            $table->tinyInteger('status')->default(WorkProgramStatus::Published());
+            $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 

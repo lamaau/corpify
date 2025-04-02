@@ -28,7 +28,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'title' => ['required', 'max:255', Rule::unique('posts', 'title')->ignore($this->post)],
-            'summary' => ['nullable', 'string', 'max:255'],
+            'summary' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'status' => ['required', new Enum(PostStatus::class)],
             'post_category_id' => ['required', Rule::exists('post_categories', 'id')],

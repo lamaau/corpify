@@ -24,10 +24,10 @@ class StoreRequest extends FormRequest
     {
         return [
             "name" => ["required"],
-            "summary" => ["required"],
+            "summary" => ["nullable"],
             'features' => ['required', 'array'],
             'features.*.icon' => ['required', 'string'],
-            'features.*.feature_name' => ['required', 'string', 'max:25'],
+            'features.*.feature_name' => ['required', 'string', 'max:50'],
         ];
     }
 

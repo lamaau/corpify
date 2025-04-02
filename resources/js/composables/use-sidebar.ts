@@ -30,11 +30,6 @@ export function useSidebar() {
             title: "Publication",
             items: [
                 {
-                    title: "Category",
-                    icon: ListTodo,
-                    url: "/publication/category",
-                },
-                {
                     title: "Publication",
                     icon: ListTodo,
                     url: "/publication/post",
@@ -42,16 +37,26 @@ export function useSidebar() {
             ],
         },
         {
-            title: "Website",
+            title: "Program",
+            items: [
+                {
+                    title: "Program",
+                    icon: ListTodo,
+                    url: "/program",
+                },
+                {
+                    title: "Work Program",
+                    icon: ListTodo,
+                    url: "/work-program",
+                },
+            ],
+        },
+        {
+            title: "Features",
             items: [
                 {
                     title: "Gallery",
                     url: "/gallery",
-                    icon: ListTodo,
-                },
-                {
-                    title: "Program",
-                    url: "/programs",
                     icon: ListTodo,
                 },
                 {

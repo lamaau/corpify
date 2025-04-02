@@ -6,6 +6,8 @@ use App\Actions\Response;
 use Illuminate\Http\Request;
 use App\Models\Post\PostCategory;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostCategory\StoreRequest;
+use App\Http\Requests\PostCategory\UpdateRequest;
 
 class PostCategoryController extends Controller
 {
@@ -27,7 +29,7 @@ class PostCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         //
     }
@@ -35,7 +37,7 @@ class PostCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(PostCategory $postCategory)
     {
         //
     }
@@ -43,7 +45,7 @@ class PostCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, PostCategory $postCategory)
     {
         //
     }
@@ -51,7 +53,7 @@ class PostCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(PostCategory $postCategory)
     {
         //
     }

@@ -16,7 +16,13 @@
     - [x] Update
     - [x] Delete
 
-- [x] News
+- [x] Post (Kegiatan, Article, Blog, Category)
+    - [x] Index
+    - [x] Store
+    - [x] Update
+    - [x] Delete
+
+- [x] Faq
     - [x] Index
     - [x] Store
     - [x] Update
@@ -28,19 +34,8 @@
     - [x] Update
     - [x] Delete
 
-- [ ] Members (Organization Hierarchy)
-    - [x] Member Positions
-        - [x] Index
-        - [x] Store
-        - [x] Update
-        - [x] Delete
-    - [x] Member Categories
-        - [x] Index
-        - [x] Store
-        - [x] Update
-        - [x] Delete
-    - [ ] Member
-        - [ ] Index
-        - [ ] Store
-        - [ ] Update
-        - [ ] Delete
+- [x] Og structure
+    - [x] Index
+    - [x] Store
+    - [x] Update
+    - [x] Delete

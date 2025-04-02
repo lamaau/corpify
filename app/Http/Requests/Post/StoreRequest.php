@@ -28,7 +28,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'title' => ['required', Rule::unique('posts', 'title'), 'max:255'],
-            'summary' => ['nullable', 'string', 'max:255'],
+            'summary' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'status' => ['required', new Enum(PostStatus::class)],
             'post_category_id' => ['required', Rule::exists('post_categories', 'id')],

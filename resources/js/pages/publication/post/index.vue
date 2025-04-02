@@ -26,9 +26,10 @@ const onFilterStatus = (selectedValues: Set<number>) => {
     <BasicPage
         title="Publication"
         description="This show all of your publication"
+        sticky
     >
         <template #actions>
-            <Button @click="$router.push({ name: 'publication.create' })">
+            <Button @click="$router.push({ name: 'publication.post.create' })">
                 Add New
                 <PlusIcon />
             </Button>

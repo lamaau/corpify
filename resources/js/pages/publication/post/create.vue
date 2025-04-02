@@ -25,6 +25,7 @@ import {
     CardContent,
     CardDescription,
 } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 const router = useRouter();
 
@@ -99,6 +100,16 @@ const onSubmit = form.handleSubmit(async (data) => {
                                 <FormLabel>Title</FormLabel>
                                 <FormControl class="flex flex-col gap-y-2">
                                     <Input v-bind="componentField" />
+                                    <FormMessage />
+                                </FormControl>
+                            </FormItem>
+                        </FormField>
+
+                        <FormField v-slot="{ componentField }" name="summary">
+                            <FormItem>
+                                <FormLabel>Summary</FormLabel>
+                                <FormControl class="flex flex-col gap-y-2">
+                                    <Textarea v-bind="componentField" />
                                     <FormMessage />
                                 </FormControl>
                             </FormItem>

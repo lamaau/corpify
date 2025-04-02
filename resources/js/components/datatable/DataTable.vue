@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { useQuery } from "@tanstack/vue-query";
 import { valueUpdater } from "@/lib/utils";
+import { useQuery } from "@tanstack/vue-query";
 import DataTableToolbar from "./DataTableToolbar.vue";
 import DataTablePagination from "./DataTablePagination.vue";
 import { FlexRender, useVueTable, getCoreRowModel } from "@tanstack/vue-table";
