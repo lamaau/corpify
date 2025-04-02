@@ -17,7 +17,7 @@ class RegulationController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Regulation::query()->paginate($request->query('per_page', 10));
+        $query = Regulation::query()->latest()->paginate($request->query('per_page', 10));
 
         return Response::success()->data($query)->message('Succesfully');
     }

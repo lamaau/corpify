@@ -63,7 +63,7 @@
         "lucide-vue": "^0.484.0",
         "prettier": "^3.4.2",
         "radix-vue": "^1.9.12",
-        "reka-ui": "^2.1.1",
+        "reka-ui": "^2.2.0",
         "rollup-plugin-visualizer": "^5.14.0",
         "simple-git-hooks": "^2.11.1",
         "typescript": "^5.7.3",

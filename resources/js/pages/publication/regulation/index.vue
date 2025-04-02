@@ -14,10 +14,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <BasicPage title="Program" description="All of your program" sticky>
+    <BasicPage title="Regulation" description="All of your regulation" sticky>
         <template #actions>
             <CreateForm :tableRef="tableRef" />
         </template>
-        <DataTable ref="tableRef" url="/programs" :columns="columns" />
+        <DataTable ref="tableRef" url="/regulations" :columns="columns" />
     </BasicPage>
 </template>

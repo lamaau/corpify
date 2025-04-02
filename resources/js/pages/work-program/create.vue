@@ -74,8 +74,8 @@ const onSubmit = form.handleSubmit(async (data) => {
 
 <template>
     <BasicPage
-        title="Create Activity"
-        description="You can create and publish the activity of your organization"
+        title="Add new work program"
+        description="You can create new work program here"
     >
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="lg:col-span-2">

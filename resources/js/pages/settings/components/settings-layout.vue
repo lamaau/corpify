@@ -4,7 +4,7 @@ import SettingsAside from "./settings-aside.vue";
 </script>
 
 <template>
-    <Page title="Settings" description="Manage your store settings.">
+    <Page title="Settings" description="Manage your store settings." sticky>
         <main class="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 w-full">
             <SettingsAside />
 

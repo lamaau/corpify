@@ -30,9 +30,14 @@ export function useSidebar() {
             title: "Publication",
             items: [
                 {
-                    title: "Publication",
+                    title: "Post",
                     icon: ListTodo,
                     url: "/publication/post",
+                },
+                {
+                    title: "Regulation",
+                    icon: ListTodo,
+                    url: "/publication/regulation",
                 },
             ],
         },

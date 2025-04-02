@@ -1,8 +1,6 @@
 import { h, Ref } from "vue";
 import TableAction from "./table-action.vue";
-import { Badge } from "@/components/ui/badge";
 import DataTableColumnHeader from "@/components/datatable/DataTableColumnHeader.vue";
-import Features from "./features.vue";
 
 export const createColumns = (tableRef: Ref) => [
     {
@@ -12,27 +10,15 @@ export const createColumns = (tableRef: Ref) => [
         },
     },
     {
-        accessorKey: "name",
+        accessorKey: "title",
         header: ({ column }: any) => {
             return h(DataTableColumnHeader, {
                 column,
-                title: "Nama",
+                title: "Title",
             });
         },
         cell: ({ row }: any) => {
-            return row.getValue("name");
-        },
-    },
-    {
-        accessorKey: "features",
-        header: ({ column }: any) => {
-            return h(DataTableColumnHeader, {
-                column,
-                title: "Features",
-            });
-        },
-        cell: ({ row }: any) => {
-            return h(Features, { features: row.original.features });
+            return row.getValue("title");
         },
     },
     {

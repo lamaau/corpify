@@ -114,14 +114,54 @@ export default {
                         height: 0,
                     },
                 },
+                "slide-in-from-right": {
+                    "0%": { transform: "translateX(100%)" },
+                    "100%": { transform: "translateX(0)" },
+                },
+                "slide-out-to-right": {
+                    "0%": { transform: "translateX(0)" },
+                    "100%": { transform: "translateX(100%)" },
+                },
+                "slide-in-from-left": {
+                    "0%": { transform: "translateX(-100%)" },
+                    "100%": { transform: "translateX(0)" },
+                },
+                "slide-out-to-left": {
+                    "0%": { transform: "translateX(0)" },
+                    "100%": { transform: "translateX(-100%)" },
+                },
+                "slide-in-from-top": {
+                    "0%": { transform: "translateY(-100%)" },
+                    "100%": { transform: "translateY(0)" },
+                },
+                "slide-out-to-top": {
+                    "0%": { transform: "translateY(0)" },
+                    "100%": { transform: "translateY(-100%)" },
+                },
+                "slide-in-from-bottom": {
+                    "0%": { transform: "translateY(100%)" },
+                    "100%": { transform: "translateY(0)" },
+                },
+                "slide-out-to-bottom": {
+                    "0%": { transform: "translateY(0)" },
+                    "100%": { transform: "translateY(100%)" },
+                },
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
                 "collapsible-down": "collapsible-down 0.2s ease-in-out",
                 "collapsible-up": "collapsible-up 0.2s ease-in-out",
+                "slide-in-from-left": "slide-in-from-left 0.3s ease-out",
+                "slide-out-to-left": "slide-out-to-left 0.3s ease-out",
+                "slide-in-from-right": "slide-in-from-right 0.3s ease-out",
+                "slide-out-to-right": "slide-out-to-right 0.3s ease-out",
+                "slide-in-from-top": "slide-in-from-top 0.3s ease-out",
+                "slide-out-to-top": "slide-out-to-top 0.3s ease-out",
+                "slide-in-from-bottom": "slide-in-from-bottom 0.3s ease-out",
+                "slide-out-to-bottom": "slide-out-to-bottom 0.3s ease-out",
             },
         },
     },
-    plugins: [animate, require("tailwindcss-animate")],
+    plugins: [animate],
 };

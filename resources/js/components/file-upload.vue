@@ -1,18 +1,32 @@
 <script setup lang="ts">
-import { ref, watch, defineEmits, defineProps } from "vue";
-import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
+import { Label } from "./ui/label";
+import {
+    ref,
+    watch,
+    computed,
+    withDefaults,
+    defineEmits,
+    defineProps,
+} from "vue";
+import { FileUpIcon } from "lucide-vue-next";
 
-const props = defineProps<{
+interface IProps {
     label: string;
     error?: string;
     file?: string; // Can be an external URL
-}>();
+    allowedMimes?: string[];
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+    allowedMimes: () => ["image/jpeg", "image/png"],
+});
 
 // Refs
 const fileInput = ref<HTMLInputElement | null>(null);
 const file = ref<File | null>(null);
-const imagePreview = ref<string | null>(props.file || null); // Initialize with prop
+const filePreview = ref<string | null>(props.file || null); // Initialize with prop
+const fileType = ref<string | null>(null);
 
 // Emit event for parent component
 const emit = defineEmits<{
@@ -24,11 +38,22 @@ watch(
     () => props.file,
     (newFile) => {
         if (newFile) {
-            imagePreview.value = newFile; // Set as preview if valid URL
+            filePreview.value = newFile; // Set as preview if valid URL
+
+            // Try to determine file type from URL
+            if (newFile.toLowerCase().endsWith(".pdf")) {
+                fileType.value = "pdf";
+            } else if (newFile.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i)) {
+                fileType.value = "image";
+            } else {
+                fileType.value = "other";
+            }
         } else {
-            imagePreview.value = null;
+            filePreview.value = null;
+            fileType.value = null;
         }
     },
+    { immediate: true },
 );
 
 // Trigger file input on click
@@ -43,9 +68,9 @@ const handleFileUpload = (event: Event) => {
 
     const selectedFile = input.files[0];
 
-    // Validate file type
-    if (!selectedFile.type.startsWith("image/")) {
-        alert("Only image files are allowed.");
+    // Validate file type using allowedMimes prop
+    if (!props.allowedMimes.includes(selectedFile.type)) {
+        alert(`Only ${props.allowedMimes.join(", ")} files are allowed.`);
         return;
     }
 
@@ -55,10 +80,19 @@ const handleFileUpload = (event: Event) => {
         return;
     }
 
+    // Set file type for rendering correct preview
+    if (selectedFile.type === "application/pdf") {
+        fileType.value = "pdf";
+    } else if (selectedFile.type.startsWith("image/")) {
+        fileType.value = "image";
+    } else {
+        fileType.value = "other";
+    }
+
     // Read file as Data URL for preview
     const reader = new FileReader();
     reader.onload = () => {
-        imagePreview.value = reader.result as string;
+        filePreview.value = reader.result as string;
         file.value = selectedFile;
         emit("file-selected", selectedFile);
     };
@@ -69,18 +103,21 @@ const handleFileUpload = (event: Event) => {
 const handleDrop = (event: DragEvent) => {
     event.preventDefault();
     if (!event.dataTransfer || !event.dataTransfer.files.length) return;
-
     fileInput.value!.files = event.dataTransfer.files;
     handleFileUpload({ target: fileInput.value } as Event);
 };
 
-// Remove uploaded image
-const removeImage = () => {
+// Remove uploaded file
+const removeFile = () => {
     file.value = null;
-    imagePreview.value = null;
+    filePreview.value = null;
+    fileType.value = null;
     if (fileInput.value) fileInput.value.value = "";
     emit("file-selected", null);
 };
+
+// Generate accept attribute string from allowedMimes
+const acceptAttribute = computed(() => props.allowedMimes.join(","));
 </script>
 
 <template>
@@ -103,28 +140,72 @@ const removeImage = () => {
                 ref="fileInput"
                 type="file"
                 class="hidden"
-                accept="image/*"
+                :accept="acceptAttribute"
                 @change="handleFileUpload"
             />
-
-            <!-- Image Preview -->
+            <!-- File Preview -->
             <div
-                v-if="imagePreview"
+                v-if="filePreview"
                 class="relative w-full h-full flex items-center justify-center"
             >
+                <!-- Image Preview -->
                 <img
-                    :src="imagePreview"
-                    alt="Preview"
+                    v-if="fileType === 'image'"
+                    :src="filePreview"
+                    alt="Image Preview"
                     class="max-h-full max-w-full object-contain rounded-lg"
                 />
+
+                <!-- PDF Preview -->
+                <div
+                    v-else-if="fileType === 'pdf'"
+                    class="flex flex-col items-center justify-center"
+                >
+                    <FileUpIcon :size="55" class="text-muted-foreground" />
+                    <span class="sr-only">PDF Document</span>
+                    <span
+                        class="text-xs text-muted-foreground truncate max-w-full mt-1"
+                    >
+                        {{ file?.name || "Document" }}
+                    </span>
+                </div>
+
+                <!-- Other File Types -->
+                <div v-else class="flex flex-col items-center justify-center">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="48"
+                        height="48"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="text-blue-500 mb-2"
+                    >
+                        <path
+                            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                        ></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    <span class="text-sm font-medium text-center"
+                        >File Document</span
+                    >
+                    <span
+                        class="text-xs text-gray-500 truncate max-w-full mt-1"
+                    >
+                        {{ file?.name || "Document" }}
+                    </span>
+                </div>
+
                 <button
                     class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1"
-                    @click.stop="removeImage"
+                    @click.stop="removeFile"
                 >
                     ✕
                 </button>
             </div>
-
             <p v-else class="text-gray-500 text-center">
                 Click to upload or drag & drop
             </p>
