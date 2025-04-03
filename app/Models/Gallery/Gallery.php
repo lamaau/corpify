@@ -3,18 +3,23 @@
 namespace App\Models\Gallery;
 
 use App\Models\Traits\HasAuthor;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
+use App\Models\Traits\HasQueryFilter;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Gallery extends Model implements HasMedia
 {
     use HasAuthor,
+        HasQueryFilter,
         InteractsWithMedia;
 
     protected $fillable = [
+        'sort',
         'caption',
+        'featured',
         'created_by',
     ];
 
@@ -38,10 +43,20 @@ class Gallery extends Model implements HasMedia
         $media = $this->media('gallery')->first();
 
         return Attribute::make(get: fn() => [
-            'file_url' => $media->getUrl(),
-            'file_name' => $media->file_name,
-            'file_size' => formatFileSize($media->size),
-            'file_mime_type' => $media->mime_type,
+            'file_url' => $media?->getUrl(),
+            'file_name' => $media?->file_name,
+            'file_size' => $media ? formatFileSize($media?->size) : 0,
+            'file_mime_type' => $media?->mime_type,
         ]);
+    }
+
+    public function scopeFeatured(Builder $query): void
+    {
+        $query->where('featured', true);
+    }
+
+    public function scopeNotFeatured(Builder $query): void
+    {
+        $query->where('featured', false);
     }
 }

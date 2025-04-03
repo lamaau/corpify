@@ -33,13 +33,14 @@ const server = ref({
     per_page: 10,
 });
 
-const onChangePageSize = (value) => {
+const onChangePageSize = (value: number) => {
     server.value.per_page = value;
 };
 
 watch(
     server,
     ({ per_page }) => {
+        // @ts-ignore
         props.table.setPageSize(per_page);
         let params = pickBy(server.value);
 

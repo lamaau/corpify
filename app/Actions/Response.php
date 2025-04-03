@@ -14,6 +14,8 @@ class Response
 
     protected array $data = [];
 
+    protected array $appended = [];
+
     protected ?string $message = null;
 
     protected int $code = 200;
@@ -29,12 +31,18 @@ class Response
             $this->data = $data->toArray();
         } elseif ($data instanceof Model) {
             $this->data = $data->toArray();
-        } else if ($data instanceof Collection) {
+        } elseif ($data instanceof Collection) {
             $this->data = $data->toArray();
         } else {
             $this->data = $data;
         }
 
+        return $this;
+    }
+
+    public function appends(array $data): self
+    {
+        $this->appended = array_merge($this->appended, $data);
         return $this;
     }
 
@@ -69,6 +77,10 @@ class Response
 
         if (!is_null($this->data)) {
             $response['data'] = $this->data;
+        }
+
+        if (!empty($this->appended)) {
+            $response = array_merge($response, $this->appended);
         }
 
         return response()->json($response, $this->code);

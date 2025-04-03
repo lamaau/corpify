@@ -90,7 +90,8 @@ return new class extends Migration
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
             $table->tinyText('caption')->nullable();
-            $table->string('status')->default(GalleryStatus::Default());
+            $table->unsignedBigInteger('sort')->default(1);
+            $table->integer('featured')->default(false);
             $table->foreignIdFor(User::class, 'created_by')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -11,7 +11,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import FileUpload from "@/components/file-upload.vue";
 import {
     FormControl,
@@ -20,57 +19,69 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import fetcher, { handleFormSubmit } from "@/lib/fetcher";
+import fetcher from "@/lib/fetcher";
 import { toast } from "@/components/ui/toast";
 import { useForm } from "vee-validate";
 import { cn } from "@/lib/utils";
-import { PlusIcon } from "lucide-vue-next";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { useFormMutation } from "@/composables/use-form-mutation";
+import { QueryClient, useQueryClient } from "@tanstack/vue-query";
+import { galleryQueryKeys } from "@/enums/query-keys";
 
-const emit = defineEmits(["update:isOpen", "submit"]);
-const props = defineProps<{ isOpen: boolean; tableRef: any }>();
+const isOpen = ref<boolean>(false);
+const queryClient: QueryClient = useQueryClient();
 
-const isDialogOpen = ref(props.isOpen);
-
-const { isSubmitting, ...form } = useForm({
+const form = useForm({
     initialValues: {
-        caption: "",
         file: "",
+        featured: 0,
+        caption: "",
     },
 });
 
-const handleFile = (file: File | null) => {
-    form.setFieldValue("file", file as any);
-};
-
-const onSubmit = handleFormSubmit(form, async (data) => {
-    const formData = new FormData();
-    formData.append("caption", data.caption);
-    if (data.file) {
-        formData.append("file", data.file);
+watch(isOpen, (newIsOpen) => {
+    if (newIsOpen) {
+        form.setFieldValue("featured", 0);
+    } else {
+        form.setFieldError("file", undefined);
     }
-    const { message } = await fetcher.postForm("/galleries", formData);
-    isDialogOpen.value = false;
-    props.tableRef.reload();
+});
 
-    toast({
-        description: message,
+const { isPending, mutate } = useFormMutation(
+    async (formData) => await fetcher.post(`galleries`, formData),
+    form,
+    {
+        onSuccess: ({ message: description }: any) => {
+            queryClient.invalidateQueries(galleryQueryKeys.all as any);
+            toast({ description });
+            isOpen.value = false;
+        },
+    },
+);
+
+const onSubmit = form.handleSubmit(async (data) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+        if (value || typeof value === "number") {
+            formData.append(key, value as any);
+        }
     });
+
+    mutate(formData);
 });
 </script>
 
 <template>
-    <Dialog v-model:open="isDialogOpen">
+    <Dialog v-model:open="isOpen">
         <DialogTrigger asChild>
-            <Button @click="isDialogOpen = true">
-                Add New
-                <PlusIcon />
-            </Button>
+            <slot />
         </DialogTrigger>
-        <DialogContent class="max-w-2xl">
+        <DialogContent class="min-w-max">
             <DialogHeader class="flex items-start">
-                <DialogTitle>Upload your file</DialogTitle>
+                <DialogTitle>Upload your image</DialogTitle>
                 <DialogDescription>
-                    Only images are allowed. Max file size: 5MB.
+                    Only images are allowed. Max image size: 5MB.
                 </DialogDescription>
             </DialogHeader>
 
@@ -93,15 +104,47 @@ const onSubmit = handleFormSubmit(form, async (data) => {
                             </FormControl>
                         </FormItem>
                     </FormField>
+                    <FormField
+                        v-slot="{ componentField, setValue, value }"
+                        name="featured"
+                    >
+                        <FormItem>
+                            <FormControl>
+                                <FormLabel>Featured</FormLabel>
+                                <div class="flex items-center space-x-2">
+                                    <Switch
+                                        id="airplane-mode"
+                                        v-bind="componentField"
+                                        @update:model-value="
+                                            setValue($event ? 1 : 0)
+                                        "
+                                    />
+                                    <Label for="airplane-mode">
+                                        {{
+                                            value
+                                                ? "Yes, this featured"
+                                                : "No, this not featured"
+                                        }}
+                                    </Label>
+                                </div>
+                                <FormMessage />
+                            </FormControl>
+                        </FormItem>
+                    </FormField>
                 </div>
                 <FileUpload
                     label="Upload image"
-                    @file-selected="handleFile"
                     :error="form.errors.value?.file"
+                    @file-selected="
+                        ($event) => {
+                            form.setFieldError('file', undefined);
+                            form.setFieldValue('file', $event as any);
+                        }
+                    "
                 />
             </div>
             <DialogFooter>
-                <Button :disabled="isSubmitting" @click="onSubmit">
+                <Button :disabled="isPending" @click="onSubmit">
                     Submit
                 </Button>
             </DialogFooter>

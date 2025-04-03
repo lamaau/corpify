@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Gallery;
 
+use App\Rules\Gallery\FeaturedRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'caption' => ['required', 'string', 'max:255'],
+            'featured' => ['required', 'boolean', new FeaturedRule($this->gallery)],
             'file' => ['nullable', 'file', 'mimes:jpeg,jpg,png,webp,pdf,mp4', 'max:5120'], // 5MB limit
         ];
     }

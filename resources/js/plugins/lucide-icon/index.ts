@@ -30,7 +30,6 @@ import {
     Image,
     Info,
     Instagram,
-    Layers,
     Layout,
     Link,
     List,

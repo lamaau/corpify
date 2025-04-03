@@ -6,6 +6,7 @@ Route::apiResource('/users', App\Http\Controllers\User\UserController::class);
 Route::get('/settings/app', App\Http\Controllers\Setting\GetSettingController::class);
 Route::post('/settings/app', App\Http\Controllers\Setting\StoreSettingController::class);
 Route::apiResource('/galleries', App\Http\Controllers\Gallery\GalleryController::class);
+Route::post('/gallery/sort', App\Http\Controllers\Gallery\GallerySortController::class);
 Route::apiResource('/programs', App\Http\Controllers\Program\ProgramController::class);
 Route::apiResource('/work-programs', App\Http\Controllers\WorkProgram\WorkProgramController::class);
 Route::apiResource('/posts', App\Http\Controllers\Post\PostController::class);
@@ -18,5 +19,4 @@ Route::apiResource('/og', App\Http\Controllers\Og\OgController::class);
 
 Route::prefix('/constant')->group(function () {
     Route::get('/posts', App\Http\Controllers\Constant\PostStatusController::class);
-    Route::get('/galleries', App\Http\Controllers\Constant\GalleryStatusController::class);
 });

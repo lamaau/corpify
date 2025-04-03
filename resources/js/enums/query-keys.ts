@@ -1,3 +1,5 @@
+import { IServerParams } from "@/composables/use-gallery";
+
 export const tableQueryKeys = {
     all: ["all-table"] as const,
     lists: (url: string) => [...tableQueryKeys.all, url] as const,
@@ -20,4 +22,10 @@ export const postQueryKeys = {
 export const workProgramQueryKeys = {
     all: ["all-work-programs"] as const,
     detail: (id: string | number) => [...workProgramQueryKeys.all, id] as const,
+};
+
+export const galleryQueryKeys = {
+    all: ["all-gallery"] as const,
+    page: (serverParams: IServerParams) =>
+        [...galleryQueryKeys.all, serverParams] as const,
 };
