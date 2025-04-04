@@ -57,6 +57,21 @@ export function useSidebar() {
             ],
         },
         {
+            title: "Site",
+            items: [
+                {
+                    title: "Contact",
+                    url: "/settings/site/contact",
+                    icon: ListTodo,
+                },
+                {
+                    title: "Carousel",
+                    url: "/settings/site/carousel",
+                    icon: ListTodo,
+                },
+            ],
+        },
+        {
             title: "Features",
             items: [
                 {
@@ -71,20 +86,20 @@ export function useSidebar() {
                 },
             ],
         },
-        {
-            title: "Other",
-            items: [
-                {
-                    title: "Settings",
-                    icon: Settings,
-                    items: [
-                        { title: "Account", url: "/settings" },
-                        { title: "Application", url: "/settings/app" },
-                        { title: "Appearance", url: "/settings/appearance" },
-                    ],
-                },
-            ],
-        },
+        // {
+        //     title: "Other",
+        //     items: [
+        //         {
+        //             title: "Settings",
+        //             icon: Settings,
+        //             items: [
+        //                 { title: "Account", url: "/settings" },
+        //                 { title: "Application", url: "/settings/app" },
+        //                 { title: "Appearance", url: "/settings/appearance" },
+        //             ],
+        //         },
+        //     ],
+        // },
     ];
 
     const otherPages = ref<NavGroup[]>([

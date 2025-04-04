@@ -561,7 +561,7 @@ const goToNextPage = () => {
                                                 <div
                                                     class="inline-flex gap-x-2"
                                                 >
-                                                    <EditForm>
+                                                    <EditForm :row="element">
                                                         <Button
                                                             variant="secondary"
                                                         >

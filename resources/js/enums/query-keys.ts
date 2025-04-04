@@ -29,3 +29,8 @@ export const galleryQueryKeys = {
     page: (serverParams: IServerParams) =>
         [...galleryQueryKeys.all, serverParams] as const,
 };
+
+export const settingQueryKeys = {
+    all: ["settings"] as const,
+    detail: (context: string) => [...galleryQueryKeys.all, context] as const,
+};

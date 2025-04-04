@@ -1,13 +1,19 @@
 import fetcher from "@/lib/fetcher";
 import { useQuery } from "@tanstack/vue-query";
+import { settingQueryKeys } from "@/enums/query-keys";
 
-export function useSettings() {
+export function useSettingsQuery(context: string) {
     return useQuery({
-        queryKey: ["settings"],
+        queryKey: settingQueryKeys.detail(context),
         queryFn: async () => {
-            const { data } = await fetcher.get("settings/app");
+            const { data } = await fetcher.get("settings/site", {
+                params: {
+                    context,
+                },
+            });
 
             return data;
         },
+        enabled: !!context,
     });
 }
