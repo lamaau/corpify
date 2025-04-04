@@ -18,7 +18,7 @@ import {
 import { toast } from "@/components/ui/toast";
 import { QueryClient, useQueryClient } from "@tanstack/vue-query";
 import { settingQueryKeys } from "@/enums/query-keys";
-import { PlusCircle, Trash2Icon } from "lucide-vue-next";
+import { PlusCircle, PlusIcon, Trash2Icon } from "lucide-vue-next";
 
 const context: string = "social_media";
 const { data: dataSocialMedia } = useSettingsQuery(context);
@@ -108,6 +108,7 @@ const onSubmit = form.handleSubmit((values) => mutate(values));
             on your site.
         </p>
     </div>
+
     <Separator class="my-4" />
     <div class="space-y-6">
         <div v-for="(field, index) in fields" :key="field.key">

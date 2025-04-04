@@ -22,12 +22,37 @@ class StoreSiteController extends Controller
 
                 $settings->fill([
                     'name' => $key,
-                    'value' => is_array($value) ? json_encode($value) : $value,
                     'context' => $context,
                     'created_by' => user()->id,
-                ]);
+                ])->save();
 
-                $settings->save();
+                if (is_array($value) && is_array($value[0] ?? null)) {
+                    $final = [];
+
+                    foreach ($value as $index => $item) {
+                        $fileUrl = null;
+                        // keep in mind, always using `file` as key if you want to upload file
+                        if (isset($item['file']) && $item['file'] instanceof \Illuminate\Http\UploadedFile) {
+                            $media = $settings->addMedia($item['file'])->toMediaCollection($key);
+                            $fileUrl = $media->getUrl();
+
+                            $final[] = [
+                                ...collect($item)->except('file'),
+                                'file' => $fileUrl,
+                            ];
+                        } else {
+                            $final[] = $item;
+                        }
+                    }
+
+                    $settings->update(['value' => json_encode($final)]);
+                } elseif ($value instanceof \Illuminate\Http\UploadedFile) {
+                    $settings->clearMediaCollection($key);
+                    $media = $settings->addMedia($value)->toMediaCollection($key);
+                    $settings->update(['value' => $media->getUrl()]);
+                } else {
+                    $settings->update(['value' => is_array($value) ? json_encode($value) : $value]);
+                }
             });
 
             return Response::success()->message('Successfully');

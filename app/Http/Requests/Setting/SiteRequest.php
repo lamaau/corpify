@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Setting;
 
 use App\Enums\SettingContext;
+use App\Rules\FileOrURL;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -35,20 +36,31 @@ class SiteRequest extends FormRequest
         }
 
         $rules = match ($context) {
-            SettingContext::CONTACT() => [
+            SettingContext::Contact() => [
                 'phone' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
             ],
-            SettingContext::ADDRESS() => [
+            SettingContext::Address() => [
                 'building_name' => 'required|string|max:255',
                 'address_line_1' => 'required|string|max:255',
                 'address_line_2' => 'required|string|max:255',
             ],
-            SettingContext::SOCIAL_MEDIA() => [
+            SettingContext::SocialMedia() => [
                 'social_media' => ['required', 'array'],
                 'social_media.*.icon' => ['required', 'string', 'max:255'],
                 'social_media.*.name' => ['required', 'string', 'max:255'],
                 'social_media.*.link' => ['required', 'url', 'max:255'],
+            ],
+            SettingContext::HeroCaraouselImage() => [
+                'hero_carousel_image' => ['required', 'array'],
+                'hero_carousel_image.*.title' => ['required', 'string', 'max:255'],
+                'hero_carousel_image.*.summary' => ['required', 'string', 'max:255'],
+                'hero_carousel_image.*.file' => ['required', new FileOrURL(['jpeg', 'jpg', 'png'])],
+            ],
+            SettingContext::HeroCaraouselText() => [
+                'hero_carousel_text' => ['required', 'array'],
+                'hero_carousel_text.*.icon' => ['required', 'string', 'max:255'],
+                'hero_carousel_text.*.summary' => ['required', 'string', 'max:255'],
             ],
         };
 
@@ -59,7 +71,7 @@ class SiteRequest extends FormRequest
 
     public function getData(): Collection
     {
-        return collect($this->validated());
+        return collect($this->validated())->except('context');
     }
 
     public function getContext(): ?string

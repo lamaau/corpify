@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
+import { ref, onMounted, watch } from "vue";
 import fetcher from "@/lib/fetcher";
 import { useForm } from "vee-validate";
 import { Input } from "@/components/ui/input";
@@ -19,15 +19,15 @@ import { toast } from "@/components/ui/toast";
 import { QueryClient, useQueryClient } from "@tanstack/vue-query";
 import { settingQueryKeys } from "@/enums/query-keys";
 
-const context: string = "contact";
-const { data: dataContact } = useSettingsQuery(context);
+const context = ref<string>("contact");
+const { data: dataContact } = useSettingsQuery(context.value);
 const queryClient: QueryClient = useQueryClient();
 
 const form = useForm({
     initialValues: {
         email: "",
         phone: "",
-        context: "",
+        context: context.value,
     },
 });
 
@@ -35,7 +35,7 @@ const fillValues = (data: any) => {
     form.setValues({
         email: data.email,
         phone: data.phone,
-        context: data.context,
+        context: context.value,
     });
 };
 
@@ -59,7 +59,7 @@ const { mutate, isPending } = useFormMutation(
             });
 
             queryClient.invalidateQueries(
-                settingQueryKeys.detail(context) as any,
+                settingQueryKeys.detail(context.value) as any,
             );
         },
     },

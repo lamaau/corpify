@@ -6,13 +6,24 @@ enum SettingContext: string
 {
     use InvokableCases;
 
-    case APP = 'app';
-    case CONTACT = 'contact';
-    case ADDRESS = 'address';
-    case SOCIAL_MEDIA = 'social_media';
+    case App = 'app';
+    case Contact = 'contact';
+    case Address = 'address';
+    case SocialMedia = 'social_media';
+    case HeroCaraouselImage = 'hero_carousel_image';
+    case HeroCaraouselText = 'hero_carousel_text';
 
-    public static function createArrayContext(string $case, string $index): string
+    /**
+     * An context have sort
+     *
+     * @return array
+     */
+    public static function getContextHaveSorts(): array
     {
-        return "{$case}.$index";
+        return [
+            self::SocialMedia(),
+            self::HeroCaraouselImage(),
+            self::HeroCaraouselText()
+        ];
     }
 }

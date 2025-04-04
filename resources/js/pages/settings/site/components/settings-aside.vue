@@ -2,10 +2,12 @@
 import { h, computed } from "vue";
 import { useRoute } from "vue-router";
 import {
-    Palette,
-    UserIcon,
-    AppWindowIcon,
     ChevronsUpDown,
+    StoreIcon,
+    GlobeIcon,
+    PhoneCallIcon,
+    ImagePlayIcon,
+    ListVideoIcon
 } from "lucide-vue-next";
 import {
     DropdownMenu,
@@ -17,10 +19,33 @@ import {
 const route = useRoute();
 const currentPath = computed(() => route.path);
 const activeClass = "text-primary font-semibold bg-primary/5";
+
 const links = [
-    { path: "/settings", label: "Account", icon: h(UserIcon) },
-    { path: "/settings/app", label: "Application", icon: h(AppWindowIcon) },
-    { path: "/settings/appearance", label: "Appearance", icon: h(Palette) },
+    {
+        path: "/settings/site/contact",
+        label: "Contact",
+        icon: h(PhoneCallIcon),
+    },
+    {
+        path: "/settings/site/address",
+        label: "Address",
+        icon: h(StoreIcon),
+    },
+    {
+        path: "/settings/site/social-media",
+        label: "Social Media",
+        icon: h(GlobeIcon),
+    },
+    {
+        path: "/settings/site/carousel-image",
+        label: "Hero Image Carousel",
+        icon: h(ImagePlayIcon),
+    },
+    // {
+    //     path: "/settings/site/carousel-text",
+    //     label: "Hero Box Carousel",
+    //     icon: h(ListVideoIcon),
+    // },
 ];
 
 const currentLink = computed(() =>
