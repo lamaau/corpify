@@ -16,6 +16,7 @@ Route::apiResource('/regulations', App\Http\Controllers\Regulation\RegulationCon
 Route::apiResource('/positions', App\Http\Controllers\Position\PositionController::class);
 Route::apiResource('/position-categories', App\Http\Controllers\PositionCategory\PositionCategoryController::class);
 Route::apiResource('/og', App\Http\Controllers\Og\OgController::class);
+Route::get('/visitor/logs', App\Http\Controllers\VisitorLog\VisitorLogController::class);
 
 Route::prefix('/constant')->group(function () {
     Route::get('/posts', App\Http\Controllers\Constant\PostStatusController::class);

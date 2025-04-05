@@ -37,7 +37,11 @@ const queryClient: QueryClient = useQueryClient();
 watchEffect(() => {
     if (dataCarsousel.value) {
         const { hero_carousel_image } = dataCarsousel.value;
-        carouselList.value = JSON.parse(JSON.stringify(hero_carousel_image));
+        if (hero_carousel_image) {
+            carouselList.value = JSON.parse(
+                JSON.stringify(hero_carousel_image),
+            );
+        }
     }
 });
 
@@ -46,9 +50,11 @@ watch(
     (values) => {
         if (values) {
             const { hero_carousel_image } = values;
-            originalCarousel.value = JSON.parse(
-                JSON.stringify(hero_carousel_image),
-            );
+            if (hero_carousel_image) {
+                originalCarousel.value = JSON.parse(
+                    JSON.stringify(hero_carousel_image),
+                );
+            }
         }
     },
     { immediate: true },

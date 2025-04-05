@@ -101,7 +101,7 @@ const onSubmit = form.handleSubmit(async (data) => {
 
     const filteredItems = props.item
         ? rawItems.filter((i) => i.id !== props.item?.id)
-        : rawItems;
+        : (rawItems ?? []);
 
     const resultArray = [{ ...data }, ...filteredItems];
 

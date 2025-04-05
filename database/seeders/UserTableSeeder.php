@@ -15,16 +15,15 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $superadmin = Role::create(['name' => 'superadmin']);
-        $member = Role::create(['name' => 'member']);
+        $superadminRole = Role::create(['name' => 'superadmin']);
+        $memberRole = Role::create(['name' => 'member']);
 
-        User::factory(100)->create()->each(function ($user, $index) use ($member) {
+        User::factory(100)->create()->each(function ($user, $index) use ($memberRole) {
             UserProfile::factory()->create(['user_id' => $user->id, 'name' => "User {$index} profile"]);
-            $user->assignRole($member);
+            $user->assignRole($memberRole);
         });
 
-        User::factory()->create([
-            'email' => 'superadmin@mail.com',
-        ])->assignRole($superadmin);
+        $superadmin = User::factory()->create(['email' => 'superadmin@mail.com'])->assignRole($superadminRole);
+        UserProfile::factory()->create(['user_id' => $superadmin->id, 'name' => 'Superadmin']);
     }
 }

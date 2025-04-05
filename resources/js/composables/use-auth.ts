@@ -1,13 +1,25 @@
 import { ref } from "vue";
 import { useForm } from "@/lib/form";
 import { useRouter } from "vue-router";
+import { User } from "@/components/app-sidebar/types";
 
 export function useAuth() {
     const router = useRouter();
-    const isAuthenticated = ref(checkTokenExists());
+    const authenticatedUser = ref<User | null>(getUser());
+    const isAuthenticated = ref<boolean>(checkTokenExists());
 
     function checkTokenExists() {
         return !!document.cookie.includes("token=");
+    }
+
+    function setUser(user: User) {
+        localStorage.setItem("user", JSON.stringify(user));
+    }
+
+    function getUser() {
+        const user = localStorage.getItem("user");
+
+        return user ? JSON.parse(user) : null;
     }
 
     function setToken(token: string) {
@@ -30,10 +42,13 @@ export function useAuth() {
             password: "",
         },
         onSuccess: ({ user, token }) => {
-            // Set token in cookies
-            setToken(token);
+            setUser({
+                name: user.profile.name,
+                email: user.email,
+                avatar: user.profile.avatar,
+            });
 
-            // Redirect to dashboard or home page
+            setToken(token);
             router.push("/dashboard");
         },
         onError: (error) => {
@@ -57,6 +72,7 @@ export function useAuth() {
 
     return {
         form,
+        authenticatedUser,
         isAuthenticated,
         setToken,
         removeToken,

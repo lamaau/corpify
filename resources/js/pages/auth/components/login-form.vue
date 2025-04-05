@@ -46,7 +46,6 @@ const onSubmit = () => {
                     v-model="form.data.email"
                     id="email"
                     type="email"
-                    placeholder="m@example.com"
                     required
                 />
                 <span v-if="form.state.errors?.email" class="text-red-500">
@@ -56,14 +55,13 @@ const onSubmit = () => {
             <div class="grid gap-2">
                 <div class="flex items-center justify-between">
                     <Label for="password"> Password </Label>
-                    <ToForgotPasswordLink />
+                    <!-- <ToForgotPasswordLink /> -->
                 </div>
                 <Input
                     v-model="form.data.password"
                     id="password"
                     type="password"
                     reqred
-                    placeholder="*********"
                 />
                 <span v-if="form.state.errors?.password" class="text-red-500">
                     {{ form.state.errors?.password[0] }}

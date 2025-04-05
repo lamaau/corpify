@@ -4,6 +4,7 @@ import SettingRoutes from "./setting";
 import GalleryRoutes from "./gallery";
 import AboutRoutes from "./about";
 import PublicationRoutes from "./publication";
+import LogsRoutes from "./logs";
 
 interface IRouteMeta {
     title: string;
@@ -43,6 +44,7 @@ export default [
             ...GalleryRoutes,
             ...AboutRoutes,
             ...PublicationRoutes,
+            ...LogsRoutes,
         ],
     },
 ];

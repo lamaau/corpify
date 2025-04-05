@@ -5,6 +5,7 @@ import {
     CreditCard,
     LayoutDashboard,
     SettingsIcon,
+    ChartColumnIcon,
 } from "lucide-vue-next";
 
 export function useSidebar() {
@@ -73,6 +74,11 @@ export function useSidebar() {
                     title: "Settings",
                     url: "/settings/site/contact",
                     icon: SettingsIcon,
+                },
+                {
+                    title: "Visitor Logs",
+                    url: "/logs/visitor",
+                    icon: ChartColumnIcon,
                 },
             ],
         },

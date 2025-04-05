@@ -35,7 +35,9 @@ const queryClient: QueryClient = useQueryClient();
 watchEffect(() => {
     if (dataCarsousel.value) {
         const { hero_carousel_text } = dataCarsousel.value;
-        carouselList.value = JSON.parse(JSON.stringify(hero_carousel_text));
+        if (hero_carousel_text) {
+            carouselList.value = JSON.parse(JSON.stringify(hero_carousel_text));
+        }
     }
 });
 
@@ -44,9 +46,11 @@ watch(
     (values) => {
         if (values) {
             const { hero_carousel_text } = values;
-            originalCarousel.value = JSON.parse(
-                JSON.stringify(hero_carousel_text),
-            );
+            if (hero_carousel_text) {
+                originalCarousel.value = JSON.parse(
+                    JSON.stringify(hero_carousel_text),
+                );
+            }
         }
     },
     { immediate: true },
@@ -57,9 +61,7 @@ const checkForChanges = () => {
 
     // Check for differences in featured items (IDs and order)
     const featuredIds = carouselList.value.map((item) => item.id);
-    const originalCarouselIds = originalCarousel.value.map(
-        (item) => item.id,
-    );
+    const originalCarouselIds = originalCarousel.value.map((item) => item.id);
 
     // Check if any IDs are different
     const hasDifferentFeaturedItems =
