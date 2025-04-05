@@ -24,7 +24,7 @@ import { useForm } from "vee-validate";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
 import { galleryQueryKeys } from "@/enums/query-keys";
-import { ICarouselList } from "@/composables/use-settings";
+import { ICarouseImagelList } from "@/composables/use-settings";
 import { useFormMutation } from "@/composables/use-form-mutation";
 import { QueryClient, useQueryClient } from "@tanstack/vue-query";
 
@@ -32,7 +32,10 @@ const isOpen = ref<boolean>(false);
 const queryClient: QueryClient = useQueryClient();
 const context = ref<string>("hero_carousel_image");
 
-const props = defineProps<{ items: ICarouselList[] }>();
+const props = defineProps<{
+    item?: ICarouseImagelList;
+    items: ICarouseImagelList[];
+}>();
 
 const form = useForm({
     initialValues: {
@@ -49,6 +52,16 @@ watch(isOpen, (newIsOpen) => {
     }
 });
 
+watch(isOpen, () => {
+    if (props.item) {
+        form.setValues({
+            title: props.item.title,
+            summary: props.item.summary,
+            file: props.item.file,
+        });
+    }
+});
+
 const { isPending, mutate } = useFormMutation(
     async (formData) => await fetcher.post(`settings/site`, formData),
     form,
@@ -58,17 +71,39 @@ const { isPending, mutate } = useFormMutation(
             toast({ description });
             isOpen.value = false;
         },
+        onError: (error: any) => {
+            const err = error.response.data.errors;
+            if (err) {
+                const index = !props.item
+                    ? props.items.length
+                    : props.items.findIndex((i) => i.id === props.item?.id);
+
+                const prefix = `${context.value}.${index}`;
+
+                const getError = (field: string) =>
+                    err?.[`${prefix}.${field}`]?.[0];
+
+                form.setErrors({
+                    title: getError("title"),
+                    summary: getError("summary"),
+                    file: getError("file"),
+                });
+            }
+        },
     },
 );
 
 const onSubmit = form.handleSubmit(async (data) => {
+    const rawItems = isProxy(props.items) ? toRaw(props.items) : props.items;
+
     const formData = new FormData();
     formData.append("context", context.value);
 
-    const resultArray = [
-        ...(isProxy(props.items) ? toRaw(props.items) : props.items),
-        { ...data },
-    ];
+    const filteredItems = props.item
+        ? rawItems.filter((i) => i.id !== props.item?.id)
+        : rawItems;
+
+    const resultArray = [{ ...data }, ...filteredItems];
 
     resultArray.forEach((item, index) => {
         Object.entries(item).forEach(([key, value]) => {
@@ -92,7 +127,13 @@ const onSubmit = form.handleSubmit(async (data) => {
         </DialogTrigger>
         <DialogContent class="min-w-max">
             <DialogHeader class="flex items-start">
-                <DialogTitle>Add new carousel</DialogTitle>
+                <DialogTitle>
+                    {{
+                        item
+                            ? "Update image carousel"
+                            : "Add new image carousel"
+                    }}
+                </DialogTitle>
                 <DialogDescription>
                     Only images are allowed. Max image size: 5MB.
                 </DialogDescription>

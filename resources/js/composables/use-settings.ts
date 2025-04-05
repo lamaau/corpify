@@ -2,10 +2,18 @@ import fetcher from "@/lib/fetcher";
 import { useQuery } from "@tanstack/vue-query";
 import { settingQueryKeys } from "@/enums/query-keys";
 
-export interface ICarouselList {
+export interface ICarouseImagelList {
+    id: string;
     title: string;
     summary: string;
     file: string;
+}
+
+export interface ICarouseTextList {
+    id: string;
+    icon: string;
+    title: string;
+    summary: string;
 }
 
 export function useSettingsQuery(context: string) {

@@ -15,11 +15,6 @@ export function useSidebar() {
             title: "General",
             items: [
                 {
-                    title: "Overview",
-                    url: "/overview",
-                    icon: ListTodo,
-                },
-                {
                     title: "Dashboard",
                     url: "/dashboard",
                     icon: LayoutDashboard,

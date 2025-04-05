@@ -102,7 +102,7 @@ const onSubmit = form.handleSubmit((values) => mutate(values));
 
 <template>
     <div>
-        <h3 class="text-lg font-medium">Social Media</h3>
+        <h3 class="text-lg font-medium">Social media</h3>
         <p class="text-sm text-muted-foreground">
             Manage your site's social media links. These links will be displayed
             on your site.

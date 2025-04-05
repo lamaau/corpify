@@ -41,11 +41,11 @@ const links = [
         label: "Hero Image Carousel",
         icon: h(ImagePlayIcon),
     },
-    // {
-    //     path: "/settings/site/carousel-text",
-    //     label: "Hero Box Carousel",
-    //     icon: h(ListVideoIcon),
-    // },
+    {
+        path: "/settings/site/carousel-text",
+        label: "Hero Box Carousel",
+        icon: h(ListVideoIcon),
+    },
 ];
 
 const currentLink = computed(() =>

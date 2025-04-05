@@ -226,7 +226,6 @@ export const lucideIconComponents = {
     HelpCircle,
     Inbox,
     Key,
-    Layers,
     Loader,
     MapPin,
     Monitor,

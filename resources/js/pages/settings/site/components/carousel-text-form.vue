@@ -10,34 +10,32 @@ import { settingQueryKeys } from "@/enums/query-keys";
 import { useMutation } from "@/composables/use-mutation";
 import { Card, CardContent } from "@/components/ui/card";
 import { QueryClient, useQueryClient } from "@tanstack/vue-query";
-import CreateCarouselImageForm from "./create-carousel-image-form.vue";
-import {
-    useSettingsQuery,
-    ICarouseImagelList,
-} from "@/composables/use-settings";
+import CreateCarouselTextForm from "./create-carousel-text-form.vue";
+import { useSettingsQuery, ICarouseTextList } from "@/composables/use-settings";
+import { lucideIconComponents } from "@/plugins/lucide-icon";
 import {
     XIcon,
     PlusIcon,
     CheckIcon,
     LayoutListIcon,
-    Trash2Icon,
     PencilIcon,
+    Trash2Icon,
 } from "lucide-vue-next";
 
-const carouselList = ref<ICarouseImagelList[]>([]);
-const originalCarousel = ref<ICarouseImagelList[]>([]);
+const carouselList = ref<ICarouseTextList[]>([]);
+const originalCarousel = ref<ICarouseTextList[]>([]);
 
 const isDragMode = ref<boolean>(false);
 const hasChanges = ref<boolean>(false);
-const context = ref<string>("hero_carousel_image");
+const context = ref<string>("hero_carousel_text");
 
 const { data: dataCarsousel } = useSettingsQuery(context.value);
 const queryClient: QueryClient = useQueryClient();
 
 watchEffect(() => {
     if (dataCarsousel.value) {
-        const { hero_carousel_image } = dataCarsousel.value;
-        carouselList.value = JSON.parse(JSON.stringify(hero_carousel_image));
+        const { hero_carousel_text } = dataCarsousel.value;
+        carouselList.value = JSON.parse(JSON.stringify(hero_carousel_text));
     }
 });
 
@@ -45,9 +43,9 @@ watch(
     () => dataCarsousel.value,
     (values) => {
         if (values) {
-            const { hero_carousel_image } = values;
+            const { hero_carousel_text } = values;
             originalCarousel.value = JSON.parse(
-                JSON.stringify(hero_carousel_image),
+                JSON.stringify(hero_carousel_text),
             );
         }
     },
@@ -59,7 +57,9 @@ const checkForChanges = () => {
 
     // Check for differences in featured items (IDs and order)
     const featuredIds = carouselList.value.map((item) => item.id);
-    const originalCarouselIds = originalCarousel.value.map((item) => item.id);
+    const originalCarouselIds = originalCarousel.value.map(
+        (item) => item.id,
+    );
 
     // Check if any IDs are different
     const hasDifferentFeaturedItems =
@@ -136,7 +136,7 @@ const saveChanges = () => {
         Object.entries(item).forEach(([key, value]) => {
             if (value) {
                 formData.append(
-                    `hero_carousel_image[${index}][${key}]`,
+                    `hero_carousel_text[${index}][${key}]`,
                     value as any,
                 );
             }
@@ -152,21 +152,19 @@ const saveChanges = () => {
         class="flex w-full flex-col md:flex-row items-start md:items-center justify-between gap-4"
     >
         <div>
-            <h3 class="text-lg font-medium">Hero image carousel</h3>
+            <h3 class="text-lg font-medium">Hero text carousel</h3>
             <p class="text-sm text-muted-foreground">
-                Manage your site's hero carousel images. These images will be
+                Manage your site's hero carousel texts. These texts will be
                 displayed in the hero section of your site.
             </p>
         </div>
         <div class="self-start md:self-auto space-x-2">
-            <CreateCarouselImageForm
-                :items="dataCarsousel?.hero_carousel_image"
-            >
+            <CreateCarouselTextForm :items="dataCarsousel?.hero_carousel_text">
                 <Button :disabled="isDragMode">
                     Add New
                     <PlusIcon class="ml-2 h-4 w-4" />
                 </Button>
-            </CreateCarouselImageForm>
+            </CreateCarouselTextForm>
             <Button
                 v-show="!isDragMode"
                 variant="outline"
@@ -237,23 +235,24 @@ const saveChanges = () => {
                         }"
                     >
                         <div
-                            class="relative aspect-video rounded-md overflow-hidden border bg-card"
+                            class="relative aspect-video rounded-md overflow-hidden flex flex-col justify-center items-center border bg-muted"
                         >
-                            <img
-                                :src="element.file"
-                                :alt="element.title"
-                                class="w-full h-full object-cover"
-                            />
+                            <!-- Overlay (for drag mode) -->
                             <div
-                                class="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center"
+                                :class="
+                                    cn(
+                                        isDragMode &&
+                                            'absolute inset-0 bg-black/70 opacity-100 duration-75 transition-all flex items-center justify-center',
+                                    )
+                                "
                             >
                                 <div
                                     class="absolute top-2 right-2 space-x-2 z-10"
                                 >
-                                    <CreateCarouselImageForm
+                                    <CreateCarouselTextForm
                                         :item="element"
                                         :items="
-                                            dataCarsousel?.hero_carousel_image
+                                            dataCarsousel?.hero_carousel_text
                                         "
                                     >
                                         <Button
@@ -263,7 +262,7 @@ const saveChanges = () => {
                                         >
                                             <PencilIcon class="h-4 w-4" />
                                         </Button>
-                                    </CreateCarouselImageForm>
+                                    </CreateCarouselTextForm>
                                     <Button
                                         v-if="
                                             isDragMode &&
@@ -277,20 +276,32 @@ const saveChanges = () => {
                                     </Button>
                                 </div>
 
+                                <!-- Drag message -->
                                 <div
                                     v-show="isDragMode"
-                                    class="text-white font-medium container text-center"
+                                    class="text-primary-foreground font-medium absolute inset-0 flex items-center justify-center text-center"
                                 >
                                     Drag to reorder
                                 </div>
+
+                                <!-- Content display -->
                                 <div
-                                    v-show="!isDragMode"
-                                    class="flex flex-col gap-y-4 items-center justify-center"
+                                    class="flex flex-col gap-y-4 items-center justify-center text-center px-4"
                                 >
-                                    <h4 class="text-white">
+                                    <component
+                                        :is="
+                                            lucideIconComponents[
+                                                element.icon as keyof typeof lucideIconComponents
+                                            ]
+                                        "
+                                        class="w-8 h-8 text-muted-foreground"
+                                    />
+                                    <h4
+                                        class="text-foreground text-lg font-semibold"
+                                    >
                                         {{ element.title }}
                                     </h4>
-                                    <p class="text-white">
+                                    <p class="text-muted-foreground text-sm">
                                         {{ element.summary }}
                                     </p>
                                 </div>

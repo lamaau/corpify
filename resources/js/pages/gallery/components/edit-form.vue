@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import FileUpload from "@/components/file-upload.vue";
+import { useMutation } from "@/composables/use-mutation";
 import {
     FormControl,
     FormField,
@@ -29,6 +30,7 @@ import { useFormMutation } from "@/composables/use-form-mutation";
 import { QueryClient, useQueryClient } from "@tanstack/vue-query";
 import { galleryQueryKeys } from "@/enums/query-keys";
 import type { IGallery } from "./types";
+import { Trash2Icon } from "lucide-vue-next";
 
 const props = defineProps<{
     row: IGallery;
@@ -80,6 +82,17 @@ const onSubmit = form.handleSubmit(async (data) => {
 
     mutate(formData);
 });
+
+const { isPending: isDeletePending, mutate: onDelete } = useMutation(
+    async () => await fetcher.delete(`/galleries/${props.row.id}`),
+    {
+        onSuccess: ({ message: description }: any) => {
+            queryClient.invalidateQueries(galleryQueryKeys.all as any);
+            toast({ description });
+            isOpen.value = false;
+        },
+    },
+);
 </script>
 
 <template>
@@ -154,7 +167,19 @@ const onSubmit = form.handleSubmit(async (data) => {
                 />
             </div>
             <DialogFooter>
-                <Button :disabled="isPending" @click="onSubmit">
+                <Button
+                    :disabled="isPending || isDeletePending"
+                    size="icon"
+                    variant="destructive"
+                    @click="onDelete"
+                >
+                    <span class="sr-only">Delete</span>
+                    <Trash2Icon />
+                </Button>
+                <Button
+                    :disabled="isPending || isDeletePending"
+                    @click="onSubmit"
+                >
                     Submit
                 </Button>
             </DialogFooter>

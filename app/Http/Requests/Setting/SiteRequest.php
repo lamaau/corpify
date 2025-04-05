@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\Setting;
 
-use App\Enums\SettingContext;
 use App\Rules\FileOrURL;
+use Illuminate\Support\Str;
+use App\Enums\SettingContext;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -60,6 +61,7 @@ class SiteRequest extends FormRequest
             SettingContext::HeroCaraouselText() => [
                 'hero_carousel_text' => ['required', 'array'],
                 'hero_carousel_text.*.icon' => ['required', 'string', 'max:255'],
+                'hero_carousel_text.*.title' => ['required', 'string', 'max:255'],
                 'hero_carousel_text.*.summary' => ['required', 'string', 'max:255'],
             ],
         };
@@ -71,11 +73,34 @@ class SiteRequest extends FormRequest
 
     public function getData(): Collection
     {
-        return collect($this->validated())->except('context');
+        return collect($this->validated())->except('context')->transform(function ($values) {
+            return collect($values)->map(function ($value) {
+                return collect($value)->put('id', Str::uuid()->toString())->all();
+            })->all();
+        });
     }
 
     public function getContext(): ?string
     {
         return $this->context;
+    }
+
+    public function messages(): array
+    {
+        return [
+            'hero_carousel_text.*.icon.required' => 'The icon field is required.',
+            'hero_carousel_text.*.title.required' => 'The title field is required.',
+            'hero_carousel_text.*.summary.required' => 'The summary field is required.',
+
+            'hero_carousel_image.*.title.required' => 'The title field is required.',
+            'hero_carousel_image.*.summary.required' => 'The summary field is required.',
+            'hero_carousel_image.*.file.required' => 'The image file is required.',
+            'hero_carousel_image.*.file' => 'The file must be a valid image (jpeg, jpg, png).',
+
+            'social_media.*.icon.required' => 'The icon field is required.',
+            'social_media.*.name.required' => 'The name field is required.',
+            'social_media.*.link.required' => 'The link field is required.',
+            'social_media.*.link.url' => 'The link must be a valid URL.',
+        ];
     }
 }

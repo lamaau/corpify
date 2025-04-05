@@ -11,7 +11,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import FileUpload from "@/components/file-upload.vue";
 import {
     FormControl,
     FormField,
@@ -23,29 +22,37 @@ import fetcher from "@/lib/fetcher";
 import { useForm } from "vee-validate";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
+import IconPicker from "@/components/icon-picker.vue";
 import { galleryQueryKeys } from "@/enums/query-keys";
-import type { ICarouselList } from "@/composables/use-settings";
+import { ICarouseTextList } from "@/composables/use-settings";
 import { useFormMutation } from "@/composables/use-form-mutation";
 import { QueryClient, useQueryClient } from "@tanstack/vue-query";
 
 const isOpen = ref<boolean>(false);
 const queryClient: QueryClient = useQueryClient();
-const context = ref<string>("hero_carousel_image");
+const context = ref<string>("hero_carousel_text");
 
-const props = defineProps<{ items: ICarouselList[] }>();
+const props = defineProps<{
+    item?: ICarouseTextList;
+    items: ICarouseTextList[];
+}>();
 
 const form = useForm({
     initialValues: {
-        file: "",
+        icon: "",
         title: "",
         summary: "",
         context: context.value,
     },
 });
 
-watch(isOpen, (newIsOpen) => {
-    if (!newIsOpen) {
-        form.setFieldError("file", undefined);
+watch(isOpen, () => {
+    if (props.item) {
+        form.setValues({
+            icon: props.item.icon,
+            title: props.item.title,
+            summary: props.item.summary,
+        });
     }
 });
 
@@ -58,30 +65,50 @@ const { isPending, mutate } = useFormMutation(
             toast({ description });
             isOpen.value = false;
         },
+        onError: (error: any) => {
+            const err = error.response.data.errors;
+            if (err) {
+                const index = !props.item
+                    ? props.items.length
+                    : props.items.findIndex((i) => i.id === props.item?.id);
+
+                const prefix = `${context.value}.${index}`;
+
+                const getError = (field: string) =>
+                    err?.[`${prefix}.${field}`]?.[0];
+
+                form.setErrors({
+                    icon: getError("icon"),
+                    title: getError("title"),
+                    summary: getError("summary"),
+                });
+            }
+        },
     },
 );
 
 const onSubmit = form.handleSubmit(async (data) => {
-    const formData = new FormData();
-    formData.append("context", context.value);
+    const rawItems = isProxy(props.items) ? toRaw(props.items) : props.items;
 
-    const resultArray = [
-        ...(isProxy(props.items) ? toRaw(props.items) : props.items),
-        { ...data },
-    ];
+    const filteredItems = props.item
+        ? rawItems.filter((i) => i.id !== props.item?.id)
+        : rawItems;
 
-    resultArray.forEach((item, index) => {
-        Object.entries(item).forEach(([key, value]) => {
-            if (value) {
-                formData.append(
-                    `hero_carousel_image[${index}][${key}]`,
-                    value as any,
-                );
-            }
-        });
-    });
+    const resultArray = [{ ...data }, ...filteredItems];
 
-    mutate(formData);
+    const payload = {
+        context: context.value,
+        hero_carousel_text: resultArray.map((item) =>
+            Object.fromEntries(
+                Object.entries(item).filter(
+                    ([, value]) =>
+                        value !== null && value !== undefined && value !== "",
+                ),
+            ),
+        ),
+    };
+
+    mutate(payload);
 });
 </script>
 
@@ -92,14 +119,28 @@ const onSubmit = form.handleSubmit(async (data) => {
         </DialogTrigger>
         <DialogContent class="min-w-max">
             <DialogHeader class="flex items-start">
-                <DialogTitle>Add new carousel</DialogTitle>
+                <DialogTitle>
+                    {{
+                        item ? "Update text carousel" : "Add new text carousel"
+                    }}
+                </DialogTitle>
                 <DialogDescription>
-                    Only images are allowed. Max image size: 5MB.
+                    Max character of summary is 255 character
                 </DialogDescription>
             </DialogHeader>
 
             <div class="flex flex-col space-y-4">
                 <div class="flex flex-col gap-y-2">
+                    <FormField v-slot="{ componentField }" name="icon">
+                        <FormItem>
+                            <FormLabel>Icon</FormLabel>
+                            <FormControl>
+                                <IconPicker v-bind="componentField" />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    </FormField>
+
                     <FormField v-slot="{ componentField }" name="title">
                         <FormItem>
                             <FormControl>
@@ -120,16 +161,6 @@ const onSubmit = form.handleSubmit(async (data) => {
                         </FormItem>
                     </FormField>
                 </div>
-                <FileUpload
-                    label="Upload image"
-                    :error="form.errors.value?.file"
-                    @file-selected="
-                        ($event) => {
-                            form.setFieldError('file', undefined);
-                            form.setFieldValue('file', $event as any);
-                        }
-                    "
-                />
             </div>
             <DialogFooter>
                 <Button :disabled="isPending" @click="onSubmit">

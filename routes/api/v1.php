@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/settings/site', App\Http\Controllers\Setting\GetSiteController::class);
 Route::post('/settings/site', App\Http\Controllers\Setting\StoreSiteController::class);
-Route::post('/settings/site/sort', App\Http\Controllers\Setting\SortSiteController::class);
 Route::apiResource('/users', App\Http\Controllers\User\UserController::class);
 Route::apiResource('/galleries', App\Http\Controllers\Gallery\GalleryController::class);
 Route::post('/gallery/sort', App\Http\Controllers\Gallery\GallerySortController::class);

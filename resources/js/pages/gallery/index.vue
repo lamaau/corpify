@@ -367,7 +367,7 @@ const goToNextPage = () => {
                                 put: true,
                             }"
                             item-key="id"
-                            class="bg-muted/30 rounded-lg min-h-[200px]"
+                            class="rounded-lg min-h-[200px]"
                             :class="{
                                 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4':
                                     featuredList.length > 0,
