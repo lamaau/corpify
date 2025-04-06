@@ -32,3 +32,10 @@
 - [TailwindCSS](https://tailwindcss.com/)
 - [ShadcnUI](https://www.shadcn-vue.com/)
 - [TanStack](https://tanstack.com/query/latest) - For Table and Query
+
+### Screenshot
+![Post](screenshot/post.png)
+![Editor](screenshot/editor.png)
+![Gallery](screenshot/gallery.png)
+![Og Structure](screenshot/og.png)
+![Setting](screenshot/setting.png)
