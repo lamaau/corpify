@@ -21,7 +21,7 @@
 
 ### Backend
 
-- [Laravel 10.x](https://laravel.com)
+- [Laravel 11.x](https://laravel.com)
 - [Laravel Sanctum](https://laravel.com/docs/sanctum) - API Auth
 - MySQL / PostgreSQL
 
