@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
             Route::middleware('api')->prefix('api/v1')->group(base_path('routes/api/auth.php'));
-            Route::middleware('api')->prefix('api/v1/public')->group(base_path('routes/api/guest.php'));
+            Route::middleware('api')->prefix('api/v1/guest')->group(base_path('routes/api/guest.php'));
             Route::middleware(['api', 'auth:sanctum'])->prefix('api/v1')->group(base_path('routes/api/v1.php'));
         }
     )

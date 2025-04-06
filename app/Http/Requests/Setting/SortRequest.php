@@ -2,11 +2,8 @@
 
 namespace App\Http\Requests\Setting;
 
-use App\Enums\SettingContext;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
 
 class SortRequest extends FormRequest
 {
@@ -26,7 +23,7 @@ class SortRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'context' => ['required', Rule::in(SettingContext::getContextHaveSorts())]
+            'context' => ['required']
         ];
     }
 

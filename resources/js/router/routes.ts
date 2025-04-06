@@ -27,7 +27,7 @@ export default [
         path: "/dashboard",
         component: async () => await import("../layouts/default.vue"),
         meta: {
-            title: "HPPI",
+            title: "CORPIFY",
         },
         children: [
             {

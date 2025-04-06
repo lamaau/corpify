@@ -1,11 +1,10 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "hppi/portal",
+    "name": "corpify/portal",
     "type": "project",
-    "description": "HPPI Portal web app",
+    "description": "Corpify Portal web app",
     "keywords": [
-        "hppi",
-        "kkp"
+        "corpify"
     ],
     "license": "MIT",
     "require": {

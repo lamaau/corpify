@@ -74,9 +74,13 @@ class SiteRequest extends FormRequest
     public function getData(): Collection
     {
         return collect($this->validated())->except('context')->transform(function ($values) {
-            return collect($values)->map(function ($value) {
-                return collect($value)->put('id', Str::uuid()->toString())->all();
-            })->all();
+            if (is_array($values)) {
+                return collect($values)->map(function ($value) {
+                    return collect($value)->put('id', Str::uuid()->toString())->all();
+                })->all();
+            }
+
+            return $values;
         });
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\VisitorLog;
+namespace App\Http\Controllers\Guest\VisitorLog;
 
 use App\Actions\Response;
 use Jenssegers\Agent\Agent;

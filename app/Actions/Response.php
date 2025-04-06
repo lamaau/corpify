@@ -12,7 +12,7 @@ class Response
 {
     protected bool $status;
 
-    protected array $data = [];
+    protected object | array $data = [];
 
     protected array $appended = [];
 

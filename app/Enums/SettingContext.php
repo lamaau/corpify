@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use App\Actions\Setting\SettingAction;
+
 enum SettingContext: string
 {
     use InvokableCases;
@@ -18,12 +20,29 @@ enum SettingContext: string
      *
      * @return array
      */
-    public static function getContextHaveSorts(): array
+    public static function contextArray(): array
     {
         return [
             self::SocialMedia(),
             self::HeroCaraouselImage(),
             self::HeroCaraouselText()
         ];
+    }
+
+    public static function getByContext(string $context)
+    {
+        $query = SettingAction::instance()->getFormattedSettings($context);
+
+        return collect($query)->transform(function ($value, $key) {
+            if (in_array($key, self::contextArray())) {
+                $decodedValue = json_decode($value, true);
+
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decodedValue)) {
+                    return $decodedValue;
+                }
+            }
+
+            return $value;
+        });
     }
 }
