@@ -23,6 +23,26 @@ class Program extends Model
         'updated_at' => DateObjectCast::class,
     ];
 
+    public static $searchColumns = [
+        'name',
+    ];
+
+    public static $relationSearchMap = [
+        'features' => 'features.feature_name',
+        'works' => ['works.title', 'works.summary'],
+    ];
+
+    public static function mapSearchColumns(array $relations): array
+    {
+        return array_merge(
+            self::$searchColumns,
+            collect(self::$relationSearchMap)
+                ->only($relations)
+                ->flatMap(fn($cols) => (array) $cols)
+                ->toArray()
+        );
+    }
+
     public function features(): HasMany
     {
         return $this->hasMany(ProgramFeature::class);

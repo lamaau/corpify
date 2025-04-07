@@ -10,6 +10,7 @@ use App\Models\Traits\HasQueryFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\Traits\WithThumbnailMediaCollection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Post extends Model implements HasMedia
@@ -46,6 +47,11 @@ class Post extends Model implements HasMedia
         'created_at' => DateObjectCast::class,
         'updated_at' => DateObjectCast::class,
     ];
+
+    public function scopePublished(Builder $query): void
+    {
+        $query->where($this->qualifyColumn('status'), PostStatus::Published());
+    }
 
     public function status(): Attribute
     {
