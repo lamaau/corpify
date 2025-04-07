@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineEmits, watch, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
