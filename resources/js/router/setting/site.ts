@@ -5,6 +5,24 @@ export default [
         path: "site",
         children: [
             {
+                path: "app",
+                name: "settings.site.app",
+                component: async () =>
+                    await import("@/pages/settings/site/app.vue"),
+                meta: {
+                    title: "Setting Site",
+                } as RouteMeta,
+            },
+            {
+                path: "seo",
+                name: "settings.site.seo",
+                component: async () =>
+                    await import("@/pages/settings/site/seo.vue"),
+                meta: {
+                    title: "Setting Site",
+                } as RouteMeta,
+            },
+            {
                 path: "contact",
                 name: "settings.site.contact",
                 component: async () =>

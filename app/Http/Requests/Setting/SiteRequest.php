@@ -37,6 +37,12 @@ class SiteRequest extends FormRequest
         }
 
         $rules = match ($context) {
+            SettingContext::App() => [
+                'app_name' => ['required', 'max:50'],
+                'app_alias_name' => ['required', 'max:10'],
+                'app_description' => ['required', 'max:100'],
+                'file' => ['required', new FileOrURL(['jpeg', 'jpg', 'png'])],
+            ],
             SettingContext::Contact() => [
                 'phone' => 'required|string|max:255',
                 'email' => 'required|email|max:255',

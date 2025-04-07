@@ -122,7 +122,7 @@ const onSubmit = form.handleSubmit((values) => mutate(values));
 
         <div class="flex justify-start">
             <Button type="button" :disabled="isPending" @click="onSubmit">
-                Update address
+                Update Address
             </Button>
         </div>
     </div>

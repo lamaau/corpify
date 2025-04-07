@@ -7,7 +7,9 @@ import {
     GlobeIcon,
     PhoneCallIcon,
     ImagePlayIcon,
-    ListVideoIcon
+    ListVideoIcon,
+    AppWindowIcon,
+    BotIcon,
 } from "lucide-vue-next";
 import {
     DropdownMenu,
@@ -21,6 +23,11 @@ const currentPath = computed(() => route.path);
 const activeClass = "text-primary font-semibold bg-primary/5";
 
 const links = [
+    {
+        path: "/settings/site/app",
+        label: "App",
+        icon: h(AppWindowIcon),
+    },
     {
         path: "/settings/site/contact",
         label: "Contact",
