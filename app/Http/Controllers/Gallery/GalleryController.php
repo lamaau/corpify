@@ -23,7 +23,7 @@ class GalleryController extends Controller
 
         return Response::success()->data($query)->appends([
             'meta' => [
-                'featured' => Gallery::query()->with('media')->featured()->orderBy('sort')->take(6)->latest()->get(),
+                'featured' => Gallery::query()->with('media')->featured()->orderBy('sort')->take(8)->latest()->get(),
             ]
         ])->message('Successfully');
     }

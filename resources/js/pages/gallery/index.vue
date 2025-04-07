@@ -29,7 +29,7 @@ const galleryList = ref<any[]>([]);
 const isDragMode = ref<boolean>(false);
 const hasChanges = ref<boolean>(false);
 
-const MAX_FEATURED_ITEMS = 6;
+const MAX_FEATURED_ITEMS = 8;
 
 const originalFeatured = ref<any[]>([]);
 const originalGallery = ref<any[]>([]);
@@ -369,7 +369,7 @@ const goToNextPage = () => {
                             item-key="id"
                             class="rounded-lg min-h-[200px]"
                             :class="{
-                                'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4':
+                                'grid grid-cols-1 md:grid-cols-4 gap-4':
                                     featuredList.length > 0,
                                 'flex items-center justify-center border-2 border-dashed':
                                     featuredList.length === 0,
