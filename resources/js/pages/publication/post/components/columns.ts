@@ -50,6 +50,7 @@ export const createColumns = (tableRef: Ref) => [
         },
     },
     {
+        id: "status",
         accessorKey: "status",
         header: ({ column }: any) => {
             return h(DataTableColumnHeader, {

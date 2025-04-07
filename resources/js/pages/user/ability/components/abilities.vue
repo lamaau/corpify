@@ -32,7 +32,7 @@ defineProps<{
                     <div
                         class="inline-flex gap-x-3 items-center p-4 hover:bg-accent cursor-default"
                     >
-                        <span class="text-sm">{{ ability.name }}</span>
+                        <span class="text-sm capitalize">{{ ability.name }}</span>
                     </div>
                     <Separator v-if="index < abilities.length - 1" />
                 </template>

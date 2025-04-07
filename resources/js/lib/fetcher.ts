@@ -1,4 +1,4 @@
-import { useForm, useSetFormErrors } from "vee-validate";
+import { useForm } from "vee-validate";
 import { z } from "zod";
 
 // Types for configuration and options
