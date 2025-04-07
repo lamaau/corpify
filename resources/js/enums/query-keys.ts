@@ -34,3 +34,7 @@ export const settingQueryKeys = {
     all: ["settings"] as const,
     detail: (context: string) => [...galleryQueryKeys.all, context] as const,
 };
+
+export const abilityQueryKeys = {
+    all: ["abilities"] as const,
+};

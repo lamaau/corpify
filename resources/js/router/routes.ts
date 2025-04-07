@@ -5,6 +5,7 @@ import GalleryRoutes from "./gallery";
 import AboutRoutes from "./about";
 import PublicationRoutes from "./publication";
 import LogsRoutes from "./logs";
+import UserRoutes from "./user";
 
 interface IRouteMeta {
     title: string;
@@ -39,6 +40,7 @@ export default [
                     title: "Dashboard",
                 } as RouteMeta & IRouteMeta,
             },
+            ...UserRoutes,
             ...ProgramRoutes,
             ...SettingRoutes,
             ...GalleryRoutes,

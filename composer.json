@@ -15,7 +15,6 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "spatie/laravel-medialibrary": "^11.12",
-        "spatie/laravel-permission": "^6.10",
         "torann/geoip": "^3.0"
     },
     "require-dev": {

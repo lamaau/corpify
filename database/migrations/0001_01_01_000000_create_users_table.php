@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\User\User;
 use App\Models\User\Position;
 use App\Models\User\PositionCategory;
 use Illuminate\Database\Migrations\Migration;

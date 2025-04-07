@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Program\Program;
 use Illuminate\Database\Seeder;
 use App\Models\Program\ProgramFeature;
-use App\Models\User;
+use App\Models\User\User;
 
 class ProgramTableSeeder extends Seeder
 {

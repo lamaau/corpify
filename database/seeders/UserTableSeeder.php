@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\User\User;
+use App\Models\Ability\Role;
+use App\Models\Ability\Ability;
 use Illuminate\Database\Seeder;
 use App\Models\User\UserProfile;
-use Spatie\Permission\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserTableSeeder extends Seeder
@@ -15,15 +16,21 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $superadminRole = Role::create(['name' => 'superadmin']);
-        $memberRole = Role::create(['name' => 'member']);
+        $superadminUser = User::factory()->create(['email' => 'superadmin@mail.com']);
 
-        User::factory(100)->create()->each(function ($user, $index) use ($memberRole) {
+        User::factory(5)->create()->each(function ($user, $index) {
             UserProfile::factory()->create(['user_id' => $user->id, 'name' => "User {$index} profile"]);
-            $user->assignRole($memberRole);
         });
 
-        $superadmin = User::factory()->create(['email' => 'superadmin@mail.com'])->assignRole($superadminRole);
-        UserProfile::factory()->create(['user_id' => $superadmin->id, 'name' => 'Superadmin']);
+        collect(config('fixtures'))->each(function ($fixture) {
+            Ability::firstOrCreate(['name' => "Manage " . ucfirst($fixture)]);
+        });
+
+        $superadminRole = Role::create(['name' => 'Superadmin']);
+        collect(['Admin', 'Editor', 'Member'])
+            ->each(fn($name) => Role::create(['name' => $name]));
+
+        $superadminRole->abilities()->sync(Ability::pluck('id'));
+        $superadminUser->roles()->sync([$superadminRole->id]);
     }
 }

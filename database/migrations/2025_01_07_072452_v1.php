@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\User\User;
 use App\Enums\Post\PostStatus;
 use App\Enums\Program\WorkProgramStatus;
 use App\Models\Post\PostCategory;
@@ -113,7 +113,6 @@ return new class extends Migration
         Schema::dropIfExists('post_categories');
         Schema::dropIfExists('posts');
         Schema::dropIfExists('regulations');
-        Schema::dropIfExists('profiles');
         Schema::dropIfExists('faqs');
         Schema::dropIfExists('program_features');
         Schema::dropIfExists('programs');

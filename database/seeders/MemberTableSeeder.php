@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Support\Facades\DB;
 
 class MemberTableSeeder extends Seeder
