@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import { cn } from "@/lib/utils";
 import { Label } from "./ui/label";
-import {
-    ref,
-    watch,
-    computed,
-    withDefaults,
-    defineEmits,
-    defineProps,
-} from "vue";
+import { ref, watch, computed } from "vue";
 import { FileUpIcon } from "lucide-vue-next";
 
 interface IProps {
