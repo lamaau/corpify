@@ -164,7 +164,7 @@ const onSubmit = form.handleSubmit(async (data) => {
                                 />
                                 <label
                                     :for="`ability-${option.id}`"
-                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    class="capitalize text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
                                     {{ option.name }}
                                 </label>

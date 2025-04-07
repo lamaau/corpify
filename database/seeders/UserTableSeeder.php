@@ -18,12 +18,15 @@ class UserTableSeeder extends Seeder
     {
         $superadminUser = User::factory()->create(['email' => 'superadmin@mail.com']);
 
+        $admin = User::factory()->create(['email' => 'admin@mail.com']);
+        UserProfile::factory()->create(['user_id' => $admin->id, 'name' => "User Admin profile"]);
+
         User::factory(5)->create()->each(function ($user, $index) {
             UserProfile::factory()->create(['user_id' => $user->id, 'name' => "User {$index} profile"]);
         });
 
         collect(config('fixtures'))->each(function ($fixture) {
-            Ability::firstOrCreate(['name' => "Manage " . ucfirst($fixture)]);
+            Ability::firstOrCreate(['name' => "manage {$fixture}"]);
         });
 
         $superadminRole = Role::create(['name' => 'Superadmin']);

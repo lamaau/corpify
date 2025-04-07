@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait HasAbility
 {
+    public function hasAbility(string $ability): bool
+    {
+        return $this->getAllAbilities()->contains($ability);
+    }
+
     public function roles(): MorphToMany
     {
         return $this->morphToMany(Role::class, 'model', 'model_has_roles');
