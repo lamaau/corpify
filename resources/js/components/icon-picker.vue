@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { ChevronsUpDown } from "lucide-vue-next";
 import { lucideIconComponents } from "@/plugins/lucide-icon";
 import { Button, ButtonVariants } from "@/components/ui/button";
-import { ref, computed, defineProps, defineEmits, withDefaults } from "vue";
+import { ref, computed } from "vue";
 import {
     Popover,
     PopoverTrigger,
