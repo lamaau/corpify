@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Actions\Response;
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,7 +14,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::query()->withWhereHas('profile')->latest()->paginate($request->query('per_page', 10));
+        $query = User::query()->withWhereHas('profile')
+            ->with(['roles'])->latest()->paginate($request->query('per_page', 10));
 
         return Response::success()->data($query)->message('Succesfully');
     }

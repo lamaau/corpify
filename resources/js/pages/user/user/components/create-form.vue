@@ -23,11 +23,9 @@ import fetcher, { handleFormSubmit } from "@/lib/fetcher";
 import { toast } from "@/components/ui/toast";
 import { useForm } from "vee-validate";
 import { cn } from "@/lib/utils";
+import { PlusIcon } from "lucide-vue-next";
 
-const emit = defineEmits(["update:isOpen", "submit"]);
-const props = defineProps<{ isOpen: boolean; tableRef: any }>();
-
-const isDialogOpen = ref(props.isOpen);
+const isDialogOpen = ref(false);
 
 const { isSubmitting, ...form } = useForm({
     initialValues: {
@@ -48,7 +46,6 @@ const onSubmit = handleFormSubmit(form, async (data) => {
     }
     const { message } = await fetcher.postForm("/galleries", formData);
     isDialogOpen.value = false;
-    props.tableRef.reload();
 
     toast({
         description: message,
@@ -59,11 +56,12 @@ const onSubmit = handleFormSubmit(form, async (data) => {
 <template>
     <Dialog v-model:open="isDialogOpen">
         <DialogTrigger asChild>
-            <Button size="sm" variant="default" @click="isDialogOpen = true">
-                Tambah
+            <Button @click="isDialogOpen = true">
+                Add New
+                <PlusIcon />
             </Button>
         </DialogTrigger>
-        <DialogContent class="max-w-2xl">
+        <DialogContent class="min-w-max">
             <DialogHeader class="flex items-start">
                 <DialogTitle>Upload your file</DialogTitle>
                 <DialogDescription>

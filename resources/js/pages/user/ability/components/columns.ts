@@ -1,7 +1,6 @@
 import { h } from "vue";
-import Photo from "./components/Photo.vue";
-import { Badge } from "@/components/ui/badge";
-import DataTableRowActions from "./components/DataTableRowActions.vue";
+import Abilities from "./abilities.vue";
+import DataTableRowActions from "./table-action.vue";
 import DataTableColumnHeader from "@/components/datatable/DataTableColumnHeader.vue";
 
 export const createColumns = (tableRef: any) => [
@@ -10,46 +9,47 @@ export const createColumns = (tableRef: any) => [
         cell: ({ row }: any) => {
             return h(DataTableRowActions, {
                 row: row.original,
-                onReload: () => {
-                    tableRef.reload();
-                },
             });
         },
     },
     {
-        accessorKey: "file",
+        accessorKey: "name",
         header: ({ column }: any) => {
             return h(DataTableColumnHeader, {
                 column,
-                title: "Status",
+                title: "Name",
             });
         },
         cell: ({ row }: any) => {
-            return h(Photo, { row: row.original });
+            return row.getValue("name");
         },
     },
     {
-        accessorKey: "status",
+        accessorKey: "summary",
         header: ({ column }: any) => {
             return h(DataTableColumnHeader, {
                 column,
-                title: "Type",
+                title: "Summary",
             });
         },
         cell: ({ row }: any) => {
-            return h(Badge, row.getValue("status"));
+            const summary = row.getValue("summary");
+
+            if (summary) return summary;
+
+            return h("span", { class: "p-2 text-muted-foreground" }, "N/A");
         },
     },
     {
-        accessorKey: "caption",
+        accessorKey: "abilities",
         header: ({ column }: any) => {
             return h(DataTableColumnHeader, {
                 column,
-                title: "caption",
+                title: "Ability",
             });
         },
         cell: ({ row }: any) => {
-            return row.getValue("caption");
+            return h(Abilities, { abilities: row.original.abilities });
         },
     },
     {
@@ -61,7 +61,7 @@ export const createColumns = (tableRef: any) => [
             });
         },
         cell: ({ row }: any) => {
-            return row.original.created_at;
+            return row.original.created_at.formatted.date;
         },
     },
 ];

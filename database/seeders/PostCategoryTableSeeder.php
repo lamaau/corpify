@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Post\PostCategory;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

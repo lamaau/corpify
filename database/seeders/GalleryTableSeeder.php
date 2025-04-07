@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Gallery\Gallery;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Support\Facades\Http;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\Log;

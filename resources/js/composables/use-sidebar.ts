@@ -53,6 +53,21 @@ export function useSidebar() {
             ],
         },
         {
+            title: "User",
+            items: [
+                {
+                    title: "User",
+                    url: "/user",
+                    icon: ListTodo,
+                },
+                {
+                    title: "User Ability",
+                    icon: ListTodo,
+                    url: "/ability",
+                },
+            ],
+        },
+        {
             title: "Features",
             items: [
                 {

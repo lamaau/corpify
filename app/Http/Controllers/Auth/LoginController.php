@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
+use App\Models\User\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 
@@ -22,11 +23,10 @@ class LoginController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        $user->loadMissing('roles');
 
         return Response::make([
             'token' => $token,
-            'user' => $user,
+            'user' => new UserResource($user->loadMissing('roles')),
         ]);
     }
 }

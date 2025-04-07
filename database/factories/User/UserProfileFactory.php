@@ -3,7 +3,7 @@
 namespace Database\Factories\User;
 
 use App\Models\User\UserProfile;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserProfileFactory extends Factory

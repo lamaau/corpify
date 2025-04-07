@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\User\User;
 use App\Models\Post\Post;
 use Illuminate\Support\Str;
 use App\Enums\Post\PostStatus;

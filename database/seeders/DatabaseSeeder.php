@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
             ->call(PostCategoryTableSeeder::class)
             ->call(PostTableSeeder::class)
             ->call(WorkProgramTableSeeder::class);
-            // ->call(GalleryTableSeeder::class);
+        // ->call(GalleryTableSeeder::class);
     }
 }

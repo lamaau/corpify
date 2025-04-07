@@ -2,7 +2,7 @@
 
 namespace App\Models\User;
 
-use App\Models\User;
+use App\Models\User\User;
 use App\Models\User\PositionAssignment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
