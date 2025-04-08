@@ -23,10 +23,10 @@ class SortRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'featured' => 'required|array',
+            'featured' => 'nullable|array',
             'featured.*.id' => 'required|exists:galleries,id',
             'featured.*.sort' => 'required|integer',
-            'gallery' => 'required|array',
+            'gallery' => 'nullable|array',
             'gallery.*.id' => 'required|exists:galleries,id',
             'gallery.*.sort' => 'required|integer',
         ];
