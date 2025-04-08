@@ -35,6 +35,11 @@ trait HasAbility
         return $roleAbilities->merge($directAbilities)->unique();
     }
 
+    public function syncRole(int $roleId): void
+    {
+        $this->roles()->sync([$roleId]);
+    }
+
     public function syncRolesAndAbilities(?int $roleId, array $abilityIds = []): void
     {
         if ($roleId) {

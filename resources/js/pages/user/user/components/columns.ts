@@ -1,7 +1,7 @@
 import { h } from "vue";
-import DataTableRowActions from "./DataTableRowActions.vue";
-import DataTableColumnHeader from "@/components/datatable/DataTableColumnHeader.vue";
 import Profile from "./profile.vue";
+import DataTableRowActions from "./table-action.vue";
+import DataTableColumnHeader from "@/components/datatable/DataTableColumnHeader.vue";
 
 export const createColumns = (tableRef: any) => [
     {
@@ -9,9 +9,6 @@ export const createColumns = (tableRef: any) => [
         cell: ({ row }: any) => {
             return h(DataTableRowActions, {
                 row: row.original,
-                onReload: () => {
-                    tableRef.reload();
-                },
             });
         },
     },
@@ -28,6 +25,23 @@ export const createColumns = (tableRef: any) => [
         },
     },
     {
+        accessorKey: "roles",
+        header: ({ column }: any) => {
+            return h(DataTableColumnHeader, {
+                column,
+                title: "Ability",
+            });
+        },
+        cell: ({ row }: any) => {
+            const roles = row.getValue("roles");
+            if (!roles.length) {
+                return h("span", { class: "p-2 text-muted-foreground" }, "N/A");
+            }
+
+            return roles[0].name;
+        },
+    },
+    {
         accessorKey: "created_at",
         header: ({ column }: any) => {
             return h(DataTableColumnHeader, {
@@ -36,7 +50,7 @@ export const createColumns = (tableRef: any) => [
             });
         },
         cell: ({ row }: any) => {
-            return row.original.created_at;
+            return row.original.created_at.formatted.date;
         },
     },
 ];

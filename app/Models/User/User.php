@@ -4,8 +4,10 @@ namespace App\Models\User;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Models\Traits\HasAbility;
+use App\Casts\DateObjectCast;
 use App\Models\User\UserProfile;
+use App\Models\Traits\HasAbility;
+use App\Models\Traits\HasQueryFilter;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +17,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens,
+        HasQueryFilter,
         HasFactory,
         HasAbility,
         Notifiable;
@@ -39,8 +42,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $with = [
-        'profile',
+    protected $casts = [
+        'created_at' => DateObjectCast::class,
+        'updated_at' => DateObjectCast::class,
     ];
 
     public function profile()

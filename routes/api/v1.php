@@ -8,7 +8,11 @@ Route::middleware(['ability:manage site setting'])->group(function () {
     Route::post('/settings/site', App\Http\Controllers\Setting\StoreSiteController::class);
 });
 
-Route::apiResource('/users', App\Http\Controllers\User\UserController::class)->middleware('ability:manage user');
+Route::middleware(['ability:manage user'])->group(function () {
+    Route::apiResource('/users', App\Http\Controllers\User\UserController::class);
+    Route::post('/role/assign/{user}', App\Http\Controllers\User\SetUserAbilityController::class);
+});
+
 Route::middleware(['ability:manage user ability'])->group(function () {
     Route::apiResource('/roles', App\Http\Controllers\Ability\RoleController::class);
     Route::get('/abilities', App\Http\Controllers\Ability\AbilityController::class);

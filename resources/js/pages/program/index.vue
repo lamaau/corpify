@@ -18,6 +18,6 @@ onMounted(() => {
         <template #actions>
             <CreateForm :tableRef="tableRef" />
         </template>
-        <DataTable ref="tableRef" url="/programs" :columns="columns" />
+        <DataTable ref="tableRef" url="/programs?withRelations=[features]" :columns="columns" />
     </BasicPage>
 </template>

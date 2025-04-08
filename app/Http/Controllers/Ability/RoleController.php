@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Ability\StoreRequest;
 use App\Http\Requests\Ability\UpdateRequest;
+use Illuminate\Database\Eloquent\Builder;
 
 class RoleController extends Controller
 {
@@ -17,7 +18,9 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Role::query()->with(['abilities'])->public()->latest()->paginate($request->query('per_page', 10));
+        $query = Role::query()
+            ->when($request->getRelationsRequest(), fn(Builder $query, $relations) => $query->with($relations))
+            ->public()->latest()->paginate($request->query('per_page', 10));
 
         return Response::success()->data($query)->message('Successfully');
     }

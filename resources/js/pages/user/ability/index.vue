@@ -25,6 +25,10 @@ onMounted(() => {
         <template #actions>
             <CreateForm :abilities="dataAbilities" />
         </template>
-        <DataTable ref="tableRef" url="/roles" :columns="columns" />
+        <DataTable
+            ref="tableRef"
+            url="/roles?withRelations=[abilities]"
+            :columns="columns"
+        />
     </BasicPage>
 </template>

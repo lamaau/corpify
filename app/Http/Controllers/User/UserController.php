@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Actions\Response;
-use App\Http\Controllers\Controller;
 use App\Models\User\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserController extends Controller
 {
@@ -14,8 +15,17 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::query()->withWhereHas('profile')
-            ->with(['roles'])->latest()->paginate($request->query('per_page', 10));
+        $relations = $request->getRelationsRequest();
+
+        $searchFields = $request->mapSearchFieldsWithRelations(
+            columns: ['email', 'phone_number'],
+            relationColumns: ['profile' => ['profile.name', 'profile.nip']],
+        );
+
+        $query = User::query()->whereHas('profile')
+            ->when($relations, fn(Builder $query) => $query->with($relations))
+            ->applySearchWhen(value: $request->get('search'), columns: $searchFields)
+            ->latest()->paginate($request->query('per_page', 10));
 
         return Response::success()->data($query)->message('Succesfully');
     }
