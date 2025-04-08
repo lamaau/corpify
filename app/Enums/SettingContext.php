@@ -15,6 +15,9 @@ enum SettingContext: string
     case HeroCaraouselImage = 'hero_carousel_image';
     case HeroCaraouselText = 'hero_carousel_text';
 
+    case AboutHistory = 'about_history';
+    case AboutVisionMission = 'about_vision_mission';
+
     /**
      * An context have sort
      *

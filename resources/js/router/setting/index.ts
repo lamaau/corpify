@@ -1,10 +1,11 @@
 import { RouteMeta } from "vue-router";
 import SiteRoutes from "./site";
+import OgRoutes from "./og";
 
 export default [
     {
         path: "/settings",
-        children: [...SiteRoutes],
+        children: [...SiteRoutes, ...OgRoutes],
     },
     // {
     //     path: "/settings",

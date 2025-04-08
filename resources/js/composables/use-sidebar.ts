@@ -87,8 +87,17 @@ export function useSidebar() {
             items: [
                 {
                     title: "Settings",
-                    url: "/settings/site/contact",
                     icon: SettingsIcon,
+                    items: [
+                        {
+                            title: "Site",
+                            url: "/settings/site/app",
+                        },
+                        {
+                            title: "About us",
+                            url: "/settings/og/history",
+                        },
+                    ],
                 },
                 {
                     title: "Visitor Logs",

@@ -70,6 +70,12 @@ class SiteRequest extends FormRequest
                 'hero_carousel_text.*.title' => ['required', 'string', 'max:255'],
                 'hero_carousel_text.*.summary' => ['required', 'string', 'max:255'],
             ],
+            SettingContext::AboutHistory() => [
+                'content' => ['required', 'string'],
+            ],
+            SettingContext::AboutVisionMission() => [
+                'content' => ['required', 'string'],
+            ]
         };
 
         return array_merge($rules, [
